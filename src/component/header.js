@@ -1,7 +1,9 @@
+import "styles/header.css";
+
 export function Header() {
   return (
-    <div>
-      <div>あだ名メーカー</div>
+    <div className="Header">
+      <div>🌸あだ名メーカー🌸</div>
     </div>
   );
 }
