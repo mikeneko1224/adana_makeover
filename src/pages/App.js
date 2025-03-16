@@ -11,8 +11,11 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <div>
-        <input type="text" name="text" value="名前を入力してね" />
+      <div className="input_space">
+        <div className="text_input">
+          <div>名前を入力してね！</div>
+          <input type="text" name="text" value="例：田中 花子" />
+        </div>
         <button onClick={nameForm}>決定！！</button>
       </div>
     </div>
