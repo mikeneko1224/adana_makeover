@@ -1,5 +1,3 @@
-import react from "react";
-
 export function Header() {
   return (
     <div>

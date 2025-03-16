@@ -1,5 +1,5 @@
-import "./App.css";
-import { Header } from "./component/header";
+import "styles/App.css";
+import { Header } from "component/header";
 import { useNavigate } from "react-router-dom";
 
 function App() {
