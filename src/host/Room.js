@@ -9,6 +9,7 @@ function Room() {
   const [isHost, setIsHost] = useState(false);
   const [contentStarted, setContentStarted] = useState(false);
   const [hostName, setHostName] = useState("");
+  const [gameStage, setGameStage] = useState("waiting");
 
   useEffect(() => {
     const name = location.state?.name || "匿名";
@@ -45,7 +46,7 @@ function Room() {
         websocket.close();
       };
     }
-  }, [roomId, isHost]);
+  }, [roomId, isHost, location.state?.name]);
 
   const startContent = () => {
     setContentStarted(true);
@@ -57,15 +58,21 @@ function Room() {
   return (
     <div className="Room">
       <h1>{hostName}さんのあだ名を考える</h1>
-      
+
       {isHost ? (
         <HostView
           contentStarted={contentStarted}
           startContent={startContent}
           inviteLink={window.location.href}
+          hostName={hostName}
+          // gameStage={gameStage}
         />
       ) : (
-        <UserView contentStarted={contentStarted} />
+        <UserView
+          contentStarted={contentStarted}
+          hostName={hostName}
+          // gameStage={gameStage}
+        />
       )}
       <h2>オンライン人数: {onlineCount}</h2>
     </div>

@@ -1,6 +1,13 @@
 import React from 'react';
 
-function HostView({ contentStarted, startContent, inviteLink }) {
+function HostView({ contentStarted, startContent, inviteLink, hostName, gameStage }) {
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      sendImage(file);
+    }
+  };
+
   return (
     <div>
       <h2>ホスト画面</h2>
@@ -8,7 +15,11 @@ function HostView({ contentStarted, startContent, inviteLink }) {
       {!contentStarted && (
         <button onClick={startContent}>スタート</button>
       )}
-      {contentStarted && <div>スタートしました！</div>}
+      {contentStarted && (
+        <>
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+        </>
+      )}
     </div>
   );
 }
