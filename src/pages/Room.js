@@ -39,7 +39,7 @@ function Room() {
           setContentStarted(true);
         } else if (message.type === "hostName") {
           setHostName(message.name);
-        }else if (message.type === "image") {
+        } else if (message.type === "image") {
           setImageData(message.image);
         }
       };
