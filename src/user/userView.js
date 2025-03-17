@@ -9,7 +9,9 @@ function UserView({ contentStarted, hostName }) {
       {contentStarted && (
         <div>{hostName}さんがスタートを押すのを待ってるよ</div>
       )}
-      {/* {contentStarted && <div>スタートしました！</div>} */}
+      {contentStarted && (
+        <div>{hostName}さんのプロフ画像を待ってるよ</div>
+      )}
     </div>
   );
 }
