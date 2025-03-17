@@ -21,7 +21,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <div className="input_space">
+      <div className="children">
         <div className="text_input">
           <div>名前を入力してね！</div>
           <input
