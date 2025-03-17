@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import "styles/Room.css";
 
 function Room() {
   const { roomId } = useParams();
@@ -14,24 +13,29 @@ function Room() {
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
     const name = location.state?.name || "匿名";
-    setHostName(name);
 
     if (roomId) {
       const websocket = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
 
       websocket.onopen = () => {
         console.log("Connected to server");
-        websocket.send(`${name} join room`);
+        websocket.send(JSON.stringify({ type: "join", name }));
       };
 
       websocket.onmessage = (event) => {
-        const message = event.data;
+        const message = JSON.parse(event.data);
         console.log("Received message from server:", message);
-        if (message.startsWith("オンライン人数: ")) {
-          setOnlineCount(parseInt(message.replace("オンライン人数: ", "")));
-        }
-        if (message === "Content started") {
+        if (message.type === "onlineCount") {
+          setOnlineCount(message.count);
+        } else if (message.type === "host") {
+          setIsHost(message.isHost);
+          if (message.isHost) {
+            setHostName(name);
+          }
+        } else if (message.type === "contentStarted") {
           setContentStarted(true);
+        } else if (message.type === "hostName") {
+          setHostName(message.name);
         }
       };
 
