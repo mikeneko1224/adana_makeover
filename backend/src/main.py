@@ -40,9 +40,12 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                 await broadcast_message(room_id, {"type": "onlineCount", "count": len(rooms[room_id])})
             elif data["type"] == "startContent":
                 await broadcast_message(room_id, {"type": "contentStarted"})
+            elif data["type"] == "image":
+                await broadcast_message(room_id, {"type": "image", "image": data["image"]})
             
     except WebSocketDisconnect:
         rooms[room_id].remove(websocket)
+        await broadcast_message(room_id, {"type": "onlineCount", "count": len(rooms[room_id])})
         print(f"User disconnected from room {room_id}. Current users in room: {len(rooms[room_id])}")
         if not rooms[room_id]:
             del rooms[room_id]

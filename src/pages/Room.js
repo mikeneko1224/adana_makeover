@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import HostView from "../host/hostView";
+import UserView from "../user/userView";
 
 function Room() {
   const { roomId } = useParams();
@@ -9,6 +11,7 @@ function Room() {
   const [isHost, setIsHost] = useState(false);
   const [contentStarted, setContentStarted] = useState(false);
   const [hostName, setHostName] = useState("");
+  const [imageData, setImageData] = useState(null);
 
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
@@ -36,6 +39,8 @@ function Room() {
           setContentStarted(true);
         } else if (message.type === "hostName") {
           setHostName(message.name);
+        }else if (message.type === "image") {
+          setImageData(message.image);
         }
       };
 
@@ -57,26 +62,23 @@ function Room() {
 
   return (
     <div className="Room">
-      {/* <h1>ルームID: {roomId}</h1> */}
       <h1>{hostName}さんのあだ名を考える</h1>
       
       {isHost ? (
-        <div>
-          <h2>ホスト画面</h2>
-
-          {!contentStarted && (
-            <>
-              <div>招待リンク: {window.location.href}</div>
-              <button onClick={startContent}>スタート</button>
-            </>
-          )}
-          {contentStarted && <div>スタートしました！</div>}
-        </div>
+        <HostView
+          contentStarted={contentStarted}
+          startContent={startContent}
+          inviteLink={window.location.href}
+          hostName={hostName}
+          ws={ws}
+        />
       ) : (
-        <div>
-          <h2>ユーザー画面</h2>
-          {contentStarted && <div>スタートしました！</div>}
-        </div>
+        <UserView
+          contentStarted={contentStarted}
+          hostName={hostName}
+          imageData={imageData}
+          ws={ws}
+        />
       )}
       <h2>オンライン人数: {onlineCount}</h2>
     </div>
