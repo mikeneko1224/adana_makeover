@@ -18,16 +18,22 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
     try:
         while True:
             message = await websocket.receive_text()
+            #dataにフロントから受け取ったjson入れた
             data = json.loads(message)
             print(f"Received message: {data}")
+
             if "name" in data:
                 print(f"{data["name"]} join room")
 
+# websocket.send_textはフロントにデータを送る
+# if data["type"] == "join":はフロントからのデータがjoinだった場合でHostを判断
+# json.dumpsはpythonのdictをjsonに変換する
+# broadcast_messageはデータを全体に送信する関数
             if data["type"] == "join":
                 if room_id not in hosts:
                     hosts[room_id] = data["name"]
                     await websocket.send_text(json.dumps({"type": "host", "isHost": True}))
-                    await broadcast_message(room_id, {"type": "hostName", "name": data["name"]})
+                    await broadcast_message(room_id, {"type": "hostName", "name": hosts[room_id]})
                 else:
                     await websocket.send_text(json.dumps({"type": "host", "isHost": False}))
                     await websocket.send_text(json.dumps({"type": "hostName", "name": hosts[room_id]}))
@@ -42,6 +48,7 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             del rooms[room_id]
             del hosts[room_id]
 
+# ルーム内の全ユーザーにメッセージを送信してる関数だよん
 async def broadcast_message(room_id: str, message: dict):
     for ws in rooms[room_id]:
         await ws.send_text(json.dumps(message))

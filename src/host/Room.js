@@ -11,7 +11,6 @@ function Room() {
   const [hostName, setHostName] = useState("");
 
   useEffect(() => {
-    //あだ名を決めたい人の名前持ってきた
     const name = location.state?.name || "匿名";
 
     if (roomId) {
@@ -57,26 +56,16 @@ function Room() {
 
   return (
     <div className="Room">
-      {/* <h1>ルームID: {roomId}</h1> */}
       <h1>{hostName}さんのあだ名を考える</h1>
       
       {isHost ? (
-        <div>
-          <h2>ホスト画面</h2>
-
-          {!contentStarted && (
-            <>
-              <div>招待リンク: {window.location.href}</div>
-              <button onClick={startContent}>スタート</button>
-            </>
-          )}
-          {contentStarted && <div>スタートしました！</div>}
-        </div>
+        <HostView
+          contentStarted={contentStarted}
+          startContent={startContent}
+          inviteLink={window.location.href}
+        />
       ) : (
-        <div>
-          <h2>ユーザー画面</h2>
-          {contentStarted && <div>スタートしました！</div>}
-        </div>
+        <UserView contentStarted={contentStarted} />
       )}
       <h2>オンライン人数: {onlineCount}</h2>
     </div>
