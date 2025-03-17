@@ -19,6 +19,10 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
         while True:
             message = await websocket.receive_text()
             data = json.loads(message)
+            print(f"Received message: {data}")
+            if "name" in data:
+                print(f"{data["name"]} join room")
+
             if data["type"] == "join":
                 if room_id not in hosts:
                     hosts[room_id] = data["name"]

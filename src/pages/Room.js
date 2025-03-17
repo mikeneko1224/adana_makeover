@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 
 function Room() {
   const { roomId } = useParams();
@@ -51,21 +51,24 @@ function Room() {
   const startContent = () => {
     setContentStarted(true);
     if (ws) {
-      ws.send("Content started");
+      ws.send(JSON.stringify({ type: "startContent" }));
     }
   };
 
   return (
     <div className="Room">
-      <h1>ルームID: {roomId}</h1>
-      <h1>{hostName}さんの名前を考える</h1>
-      <h2>オンライン人数: {onlineCount}</h2>
+      {/* <h1>ルームID: {roomId}</h1> */}
+      <h1>{hostName}さんのあだ名を考える</h1>
+      
       {isHost ? (
         <div>
           <h2>ホスト画面</h2>
-          <div>招待リンク: {window.location.href}</div>
+
           {!contentStarted && (
-            <button onClick={startContent}>スタート</button>
+            <>
+              <div>招待リンク: {window.location.href}</div>
+              <button onClick={startContent}>スタート</button>
+            </>
           )}
           {contentStarted && <div>スタートしました！</div>}
         </div>
@@ -75,6 +78,7 @@ function Room() {
           {contentStarted && <div>スタートしました！</div>}
         </div>
       )}
+      <h2>オンライン人数: {onlineCount}</h2>
     </div>
   );
 }
