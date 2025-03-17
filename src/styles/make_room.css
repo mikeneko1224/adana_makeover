@@ -1,4 +1,4 @@
-.input_space {
+.room_childlen {
   text-align: center;
   width: 40%;
   border: solid;
@@ -8,10 +8,7 @@
   margin: 0 auto;
 }
 
-.text_input {
-  padding: 20px 0px;
-}
-
-.decide_button {
-  margin-bottom: 20px;
+.invite_form {
+  display: flex;
+  justify-content: center;
 }
