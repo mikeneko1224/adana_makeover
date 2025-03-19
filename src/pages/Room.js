@@ -61,26 +61,28 @@ function Room() {
   };
 
   return (
-    <div className="Room">
-      <h1>{hostName}さんのあだ名を考える</h1>
-      
-      {isHost ? (
-        <HostView
-          contentStarted={contentStarted}
-          startContent={startContent}
-          inviteLink={window.location.href}
-          hostName={hostName}
-          ws={ws}
-        />
-      ) : (
-        <UserView
-          contentStarted={contentStarted}
-          hostName={hostName}
-          imageData={imageData}
-          ws={ws}
-        />
-      )}
-      <h2>オンライン人数: {onlineCount}</h2>
+    <div class="children">
+      <div className="Room">
+        <h1>{hostName}さんのあだ名を考える</h1>
+
+        {isHost ? (
+          <HostView
+            contentStarted={contentStarted}
+            startContent={startContent}
+            inviteLink={window.location.href}
+            hostName={hostName}
+            ws={ws}
+          />
+        ) : (
+          <UserView
+            contentStarted={contentStarted}
+            hostName={hostName}
+            imageData={imageData}
+            ws={ws}
+          />
+        )}
+        <h2>オンライン人数: {onlineCount}</h2>
+      </div>
     </div>
   );
 }
