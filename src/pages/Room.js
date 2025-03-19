@@ -13,7 +13,7 @@ function Room() {
   const [hostName, setHostName] = useState("");
   const [gameStage, setGameStage] = useState("notStarted");
   const [imageData, setImageData] = useState(null);
-
+  const [nicknames, setNicknames] = useState([]);
 
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
@@ -48,11 +48,14 @@ function Room() {
           }
         } else if (message.type === "image") {
           setImageData(message.image);
+        } else if (message.type === "nicknames") {
+          console.log(message.nicknames);
+          setNicknames(message.nicknames);
         }
       };
 
       setWs(websocket);
-      
+
       return () => {
         console.log("Disconnected from server");
         websocket.close();
@@ -83,6 +86,7 @@ function Room() {
           gameStage={gameStage}
           ws={ws}
           imageData={imageData}
+          nicknames={nicknames}
         />
       ) : (
         <UserView
@@ -92,6 +96,7 @@ function Room() {
           gameStage={gameStage}
           ws={ws}
           imageData={imageData}
+          nicknames={nicknames}
         />
       )}
     </div>

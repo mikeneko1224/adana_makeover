@@ -64,7 +64,7 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                     nameCounts[room_id] += 1
                     print(f"送信済みの人数: {nameCounts[room_id]}")
                     if nameCounts[room_id] == len(rooms[room_id]):
-                        await broadcast_message(room_id, {"type": "gameStage", "nicknames": nicknames[room_id]})
+                        await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
                         await broadcast_message(room_id, {"type": "gameStage", "gameStage": "choosingName"})
                         nameCounts[room_id] = 0
                 elif data["gameStage"] == "choseName" or data["gameStage"] == "badName":
@@ -91,6 +91,7 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                 await broadcast_message(room_id, {"type": "image", "image": data["image"]})
             elif data["type"] == "nickname":
                 nicknames[room_id].append(data["nickname"])
+                nicknames[room_id] = list(set(nicknames[room_id]))
                 await broadcast_message(room_id, {"type": "nickname", "nickname": data["nickname"]})
                 print (f"nicknames: {nicknames[room_id]}")
             
