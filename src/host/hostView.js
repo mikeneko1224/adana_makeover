@@ -10,6 +10,7 @@ function HostView({
   onlineCount,
   gameStage,
   ws,
+  nicknames,
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -114,6 +115,11 @@ function HostView({
       {contentStarted && gameStage === "choosingName" && (
         <>
           <div>あだ名を選ぼう</div>
+          <ul>
+            {[...new Set(nicknames)].map((nickname, index) => (
+              <li key={index}>{nickname}</li>
+            ))}
+          </ul>
           <button onClick={badName}>もう一度</button>
           <button onClick={goodName}>きにいった</button>
         </>
