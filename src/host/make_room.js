@@ -12,7 +12,7 @@ export default function MakeRoom() {
   return (
     <div>
       <Header />
-      <div className="childlen">
+      <div className="children">
         <div>Aさんのあだ名を決めるルームを作ったよ！友達に送ろう！</div>
         <div className="invite_form">
           <input type="text" value="招待用リンク" />
