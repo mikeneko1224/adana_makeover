@@ -1,27 +1,23 @@
 import React from "react";
 import "styles/make_room.css";
 import { Header } from "component/header";
-import { useNavigate } from "react-router-dom";
 
-export default function MakeRoom() {
-  const navigate = useNavigate();
-  const startNav = () => {
-    navigate("/wait");
-  };
+export default function MakeRoom({inviteLink, startContent, hostName, onlineCount}) {
 
   return (
     <div>
       <Header />
       <div className="childlen">
-        <div>Aさんのあだ名を決めるルームを作ったよ！友達に送ろう！</div>
+        <div>{hostName}さんのあだ名を決めるルームを作ったよ！友達に送ろう！</div>
         <div className="invite_form">
-          <input type="text" value="招待用リンク" />
+
+          <input type="text" value={inviteLink} />
           <div>
             <button>コピー</button>
           </div>
         </div>
-        <div>現在のオンライン：⚪︎人</div>
-        <button onClick={startNav}>スタート</button>
+        <div>現在のオンライン：{onlineCount}人</div>
+        <button onClick={startContent}>スタート</button>
       </div>
     </div>
   );
