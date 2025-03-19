@@ -1,16 +1,19 @@
 import React from "react";
 import { useState } from "react";
+import MakeRoom from "./make_room";
 
 function HostView({
   contentStarted,
   startContent,
   inviteLink,
   hostName,
+  onlineCount,
   gameStage,
   ws,
 }) {
 
   const [selectedFile, setSelectedFile] = useState(null);
+  
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -39,8 +42,13 @@ function HostView({
 
       {!contentStarted && (
         <>
-          <div>招待リンク: {inviteLink}</div>
-          <button onClick={startContent}>スタート</button>
+          <MakeRoom 
+            ws={ws}
+            inviteLink={inviteLink}
+            startContent={startContent}
+            hostName={hostName}
+            onlineCount={onlineCount}
+          />
         </>
       )}
       {contentStarted && (

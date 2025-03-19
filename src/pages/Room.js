@@ -62,7 +62,8 @@ function Room() {
 
   return (
     <div className="Room">
-      <h1>{hostName}さんのあだ名を考える</h1>
+      <h1>{hostName}さんのあだ名を考える部屋</h1>
+      <h2>オンライン人数: {onlineCount}</h2>
       
       {isHost ? (
         <HostView
@@ -70,17 +71,19 @@ function Room() {
           startContent={startContent}
           inviteLink={window.location.href}
           hostName={hostName}
+          onlineCount={onlineCount}
           ws={ws}
+          imageData={imageData}
         />
       ) : (
         <UserView
           contentStarted={contentStarted}
           hostName={hostName}
-          imageData={imageData}
+          onlineCount={onlineCount}
           ws={ws}
+          imageData={imageData}
         />
       )}
-      <h2>オンライン人数: {onlineCount}</h2>
     </div>
   );
 }
