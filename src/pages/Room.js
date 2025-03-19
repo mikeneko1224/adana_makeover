@@ -11,6 +11,7 @@ function Room() {
   const [isHost, setIsHost] = useState(false);
   const [contentStarted, setContentStarted] = useState(false);
   const [hostName, setHostName] = useState("");
+  const [gameStage, setGameStage] = useState("notStarted");
   const [imageData, setImageData] = useState(null);
 
   useEffect(() => {
@@ -39,6 +40,11 @@ function Room() {
           setContentStarted(true);
         } else if (message.type === "hostName") {
           setHostName(message.name);
+        } else if (message.type === "gameStage") {
+          setGameStage(message.gameStage);
+          if (gameStage === "gameOver") {
+            websocket.close();
+          }
         } else if (message.type === "image") {
           setImageData(message.image);
         }
@@ -57,32 +63,36 @@ function Room() {
     setContentStarted(true);
     if (ws) {
       ws.send(JSON.stringify({ type: "startContent" }));
+      ws.send(JSON.stringify({ type: "gameStage", gameStage: "gameStart" }));
     }
   };
 
   return (
-    <div class="children">
-      <div className="Room">
-        <h1>{hostName}さんのあだ名を考える</h1>
+    <div className="Room">
+      <h1>{hostName}さんのあだ名を考える部屋</h1>
+      <h2>オンライン人数: {onlineCount}</h2>
 
-        {isHost ? (
-          <HostView
-            contentStarted={contentStarted}
-            startContent={startContent}
-            inviteLink={window.location.href}
-            hostName={hostName}
-            ws={ws}
-          />
-        ) : (
-          <UserView
-            contentStarted={contentStarted}
-            hostName={hostName}
-            imageData={imageData}
-            ws={ws}
-          />
-        )}
-        <h2>オンライン人数: {onlineCount}</h2>
-      </div>
+      {isHost ? (
+        <HostView
+          contentStarted={contentStarted}
+          startContent={startContent}
+          inviteLink={window.location.href}
+          hostName={hostName}
+          onlineCount={onlineCount}
+          gameStage={gameStage}
+          ws={ws}
+          imageData={imageData}
+        />
+      ) : (
+        <UserView
+          contentStarted={contentStarted}
+          hostName={hostName}
+          onlineCount={onlineCount}
+          gameStage={gameStage}
+          ws={ws}
+          imageData={imageData}
+        />
+      )}
     </div>
   );
 }
