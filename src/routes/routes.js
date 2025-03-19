@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import TopPage from "host/App.js";
+import TopPage from "pages/App.js";
 import Room from "pages/Room";
 
 export const AppRoutes = () => {
