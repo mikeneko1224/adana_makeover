@@ -11,7 +11,9 @@ function Room() {
   const [isHost, setIsHost] = useState(false);
   const [contentStarted, setContentStarted] = useState(false);
   const [hostName, setHostName] = useState("");
+  const [gameStage, setGameStage] = useState("notStarted");
   const [imageData, setImageData] = useState(null);
+
 
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
@@ -39,13 +41,18 @@ function Room() {
           setContentStarted(true);
         } else if (message.type === "hostName") {
           setHostName(message.name);
+        } else if (message.type === "gameStage") {
+          setGameStage(message.gameStage);
+          if(gameStage === "gameOver"){
+            websocket.close();
+          }
         } else if (message.type === "image") {
           setImageData(message.image);
         }
       };
 
       setWs(websocket);
-
+      
       return () => {
         console.log("Disconnected from server");
         websocket.close();
@@ -57,6 +64,7 @@ function Room() {
     setContentStarted(true);
     if (ws) {
       ws.send(JSON.stringify({ type: "startContent" }));
+      ws.send(JSON.stringify({ type: "gameStage", gameStage: "gameStart" }));
     }
   };
 
@@ -72,6 +80,7 @@ function Room() {
           inviteLink={window.location.href}
           hostName={hostName}
           onlineCount={onlineCount}
+          gameStage={gameStage}
           ws={ws}
           imageData={imageData}
         />
@@ -80,6 +89,7 @@ function Room() {
           contentStarted={contentStarted}
           hostName={hostName}
           onlineCount={onlineCount}
+          gameStage={gameStage}
           ws={ws}
           imageData={imageData}
         />
