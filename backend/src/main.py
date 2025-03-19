@@ -10,6 +10,7 @@ hosts: Dict[str, str] = {}
 nicknames: Dict[str, List[str]] = {}
 nameCounts: Dict[str, int] = {}
 votes: Dict[str, Dict[str, int]] = {}
+badCount: Dict[str, int] = {}
 
 @app.websocket("/ws/{room_id}")
 async def websocket_endpoint(websocket: WebSocket, room_id: str):
@@ -22,6 +23,8 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
         nameCounts[room_id] = 0
     if room_id not in votes:
         votes[room_id] = {}
+    if room_id not in badCount:
+        badCount[room_id] = 0
     rooms[room_id].append(websocket)
     print(f"User connected to room {room_id}. Current users in room: {len(rooms[room_id])}")
 
@@ -64,29 +67,30 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                     nameCounts[room_id] += 1
                     print(f"送信済みの人数: {nameCounts[room_id]}")
                     if nameCounts[room_id] == len(rooms[room_id]):
+                        votes[room_id] = {nickname: 0 for nickname in nicknames[room_id]}
                         await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
                         await broadcast_message(room_id, {"type": "gameStage", "gameStage": "choosingName"})
                         nameCounts[room_id] = 0
                 elif data["gameStage"] == "choseName" or data["gameStage"] == "badName":
-                    if data["gameStage"] == "choseName":
-                        goodCount += 1
-                        print(f"今の合計{goodCount+badCount}")
+                    if "choseName" in data:
+                        votes[room_id][data["choseName"]] = votes[room_id].get(data["choseName"], 0) + 1
                     else:
-                        badCount += 1
-                        print(f"今の合計{goodCount+badCount}部屋には{len(rooms[room_id])}人いる")
-                    if goodCount + badCount == len(rooms[room_id]):
-                        if goodCount <= badCount:
+                        badCount[room_id] += 1
+                    if sum(votes[room_id].values()) + badCount[room_id] == len(rooms[room_id]):
+                        if sum(votes[room_id].values()) <= badCount[room_id]:
+                            await broadcast_message(room_id, {"type": "result", "result": votes[room_id], "badCount": badCount[room_id]})
+                            print(f"votes: {votes[room_id]}")
                             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
                             await asyncio.sleep(8)
                             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
-                            goodCount = 0
-                            badCount = 0
+                            badCount[room_id] = 0
+                            votes[room_id] = {}
                         else:
+                            await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
                             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
                             await asyncio.sleep(8)
                             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "gameOver"})
-                            goodCount = 0
-                            badCount = 0
+                            badCount[room_id] = 0
             elif data["type"] == "image":
                 await broadcast_message(room_id, {"type": "image", "image": data["image"]})
             elif data["type"] == "nickname":

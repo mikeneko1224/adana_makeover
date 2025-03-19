@@ -14,6 +14,7 @@ function Room() {
   const [gameStage, setGameStage] = useState("notStarted");
   const [imageData, setImageData] = useState(null);
   const [nicknames, setNicknames] = useState([]);
+  const [votes, setVotes] = useState([]);
 
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
@@ -51,6 +52,8 @@ function Room() {
         } else if (message.type === "nicknames") {
           console.log(message.nicknames);
           setNicknames(message.nicknames);
+        } else if (message.type === "votes") {
+          setVotes(message.votes);
         }
       };
 
@@ -87,6 +90,7 @@ function Room() {
           ws={ws}
           imageData={imageData}
           nicknames={nicknames}
+          votes={votes}
         />
       ) : (
         <UserView
@@ -97,6 +101,7 @@ function Room() {
           ws={ws}
           imageData={imageData}
           nicknames={nicknames}
+          votes={votes}
         />
       )}
     </div>
