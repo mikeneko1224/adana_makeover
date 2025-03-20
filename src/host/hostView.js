@@ -1,7 +1,22 @@
-import React from "react";
-import { useState } from "react";
+import React ,{ useState, useReducer } from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
+
+const initialState = {
+  isNicknameSent: false,
+  choseName: false,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_NICKNAME_SENT":
+      return { ...state, isNicknameSent: true };
+    case "SET_CHOSE_NAME":
+      return { ...state, choseName: true };
+    default:
+      return state;
+  }
+}
 
 function HostView({
   contentStarted,
@@ -17,6 +32,7 @@ function HostView({
   keyword,
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [answer, setAnswer] = useState("");
 
   //ホストのみの操作
   const handleImageUpload = (event) => {
@@ -42,7 +58,7 @@ function HostView({
       reader.readAsDataURL(selectedFile);
     }
   };
-  const [answer, setAnswer] = useState("");
+  
   const sendAnswer = () => {
     ws.send(
       JSON.stringify({
@@ -54,6 +70,7 @@ function HostView({
   };
 
   //共通部分
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [nickname, setNickname] = useState("");
   const [isNicknameSent, setIsNicknameSent] = useState(false);
   const [choseName, setChoseName] = useState(false);
