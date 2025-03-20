@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import HostView from "../host/hostView";
 import UserView from "../user/userView";
+import { Header } from "component/header";
 
 function Room() {
   const { roomId } = useParams();
@@ -49,7 +50,7 @@ function Room() {
           setHostName(message.name);
         } else if (message.type === "gameStage") {
           setGameStage(message.gameStage);
-          if(gameStage === "gameOver"){
+          if (gameStage === "gameOver") {
             websocket.close();
           }
         } else if (message.type === "image") {
@@ -85,9 +86,9 @@ function Room() {
 
   return (
     <div className="Room">
-      <h1>{hostName}さんのあだ名を考える部屋</h1>
-      <h2>オンライン人数: {onlineCount}</h2>
-      
+      <Header />
+      <h1 class="room_title">〜{hostName}さんのあだ名を考える部屋〜</h1>
+
       {isHost ? (
         <HostView
           contentStarted={contentStarted}
