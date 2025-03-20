@@ -8,6 +8,9 @@ app = FastAPI()
 rooms: Dict[str, List[WebSocket]] = {}
 hosts: Dict[str, str] = {}
 nicknames: Dict[str, List[str]] = {}
+questions: Dict[str, str] = {}
+questionsCount: Dict[str, int] = {}
+answer: Dict[str, str] = {}
 nameCounts: Dict[str, int] = {}
 votes: Dict[str, Dict[str, int]] = {}
 badCount: Dict[str, int] = {}
@@ -25,6 +28,12 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
         votes[room_id] = {}
     if room_id not in badCount:
         badCount[room_id] = 0
+    if room_id not in questions:
+        questions[room_id] = []
+    if room_id not in questionsCount:
+        questionsCount[room_id] = 0
+    if room_id not in answer:
+        answer[room_id] = ""
     rooms[room_id].append(websocket)
     print(f"User connected to room {room_id}. Current users in room: {len(rooms[room_id])}")
 
@@ -60,9 +69,15 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                 elif data["gameStage"] == "sendImage":
                     await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
                 elif data["gameStage"] == "sendQuestion":
-                    await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingAnswer"})
+                    questions[room_id].append(data["question"])
+                    questionsCount[room_id] += 1
+                    if questionsCount[room_id] == len(rooms[room_id])-1:
+                        await broadcast_message(room_id, {"type": "questions", "questions": questions[room_id]})
+                        await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingAnswer"})
+                        questionsCount[room_id] = 0
                 elif data["gameStage"] == "sendAnswer":
-                    await broadcast_message(room_id, {"type": "gameStage", "gameStage": "thinkingName"})
+                    answer[room_id] = data["answer"]
+                    await broadcast_message(room_id, {"type": "gameStage", "gameStage": "thinkingName", "keyword": data["answer"]})
                 elif data["gameStage"] == "sendName":
                     nameCounts[room_id] += 1
                     print(f"送信済みの人数: {nameCounts[room_id]}")
@@ -109,6 +124,9 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             del nicknames[room_id]
             del nameCounts[room_id]
             del votes[room_id]
+            del badCount[room_id]
+            del questions[room_id]
+            del questionsCount[room_id]
 
 # ルーム内の全ユーザーにメッセージを送信してる関数だよん
 async def broadcast_message(room_id: str, message: dict):

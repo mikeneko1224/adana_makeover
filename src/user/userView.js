@@ -9,11 +9,22 @@ function UserView({
   ws,
   nicknames,
   votes,
+  questions,
+  keyword
 }) {
   //ユーザーのみの操作
+  const [question, setQuestion] = useState("");
+  const [isQuestionSent, setIsQuestionSent] = useState(false);
   const sendQuestion = () => {
     if (gameStage === "waitingQuestion") {
-      ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendQuestion" }));
+      ws.send(
+        JSON.stringify({
+          type: "gameStage",
+          gameStage: "sendQuestion",
+          question: question,
+        })
+      );
+      setIsQuestionSent(true);
     }
   };
 
@@ -55,19 +66,35 @@ function UserView({
       {contentStarted && gameStage === "waitingQuestion" && (
         <div>
           {imageData && <img src={imageData} alt="プロフ画像" />}
-          <div>{hostName}さんに質問しよう</div>
-          <button onClick={sendQuestion}>質問送信</button>
+          {!isQuestionSent ? (
+            <>
+              <div>{hostName}さんに質問しよう</div>
+              <input
+                type="text"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+              />
+              <button onClick={sendQuestion}>質問送信</button>
+            </>
+          ) : (
+            <p>送信済み</p>
+          )}
         </div>
       )}
       {contentStarted && gameStage === "waitingAnswer" && (
         <div>
           {imageData && <img src={imageData} alt="プロフ画像" />}
+          <div>送った質問</div>
+          <div>{questions.map((index)=>{
+            return <div key={index}>{index}</div>
+          })}</div>
           <div>{hostName}さんの回答を待っているよ</div>
         </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
         <>
           <div>あだ名を考えよう</div>
+          <div>キーワード: {keyword}</div>
           {!isNicknameSent ? (
             <form
               onSubmit={(e) => {

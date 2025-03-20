@@ -13,6 +13,8 @@ function Room() {
   const [hostName, setHostName] = useState("");
   const [gameStage, setGameStage] = useState("notStarted");
   const [imageData, setImageData] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [keyword, setKeyword] = useState("");
   const [nicknames, setNicknames] = useState([]);
   const [votes, setVotes] = useState([]);
 
@@ -49,6 +51,10 @@ function Room() {
           }
         } else if (message.type === "image") {
           setImageData(message.image);
+        } else if (message.type === "questions") {
+          setQuestions(message.questions);
+        } else if (message.type === "keyword") {
+          setKeyword(message.keyword);
         } else if (message.type === "nicknames") {
           console.log(message.nicknames);
           setNicknames(message.nicknames);
@@ -89,6 +95,8 @@ function Room() {
           gameStage={gameStage}
           ws={ws}
           imageData={imageData}
+          questions={questions}
+          keyword={keyword}
           nicknames={nicknames}
           votes={votes}
         />
@@ -100,6 +108,8 @@ function Room() {
           gameStage={gameStage}
           ws={ws}
           imageData={imageData}
+          questions={questions}
+          keyword={keyword}
           nicknames={nicknames}
           votes={votes}
         />

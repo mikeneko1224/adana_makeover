@@ -12,6 +12,8 @@ function HostView({
   ws,
   nicknames,
   votes,
+  questions,
+  keyword
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -39,9 +41,9 @@ function HostView({
       reader.readAsDataURL(selectedFile);
     }
   };
-
+  const [answer, setAnswer] = useState("");
   const sendAnswer = () => {
-    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendAnswer" }));
+    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendAnswer", answer: answer }));
   };
 
   //共通部分
@@ -96,12 +98,17 @@ function HostView({
       {contentStarted && gameStage === "waitingAnswer" && (
         <>
           <div>質問に答えよう</div>
+          <div>{questions.map((index)=>{
+            return <div key={index}>{index}</div>
+          })}</div>
+          <input type="text" value={answer} onChange={(e)=>{setAnswer(e.target.value)}}/>
           <button onClick={sendAnswer}>回答送信</button>
         </>
       )}
       {contentStarted && gameStage === "thinkingName" && (
         <>
           <div>あだ名を考えよう</div>
+          <div>キーワード: {keyword}</div>
           {!isNicknameSent ? (
             <form
               onSubmit={(e) => {
