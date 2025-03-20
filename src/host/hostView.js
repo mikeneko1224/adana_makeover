@@ -57,6 +57,7 @@ function HostView({
   };
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
+    setChoseName(true);
   };
   const goodName = () => {
     ws.send(
