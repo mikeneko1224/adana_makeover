@@ -11,6 +11,9 @@ function HostView({
   gameStage,
   ws,
   nicknames,
+  votes,
+  questions,
+  keyword
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -38,14 +41,15 @@ function HostView({
       reader.readAsDataURL(selectedFile);
     }
   };
-
+  const [answer, setAnswer] = useState("");
   const sendAnswer = () => {
-    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendAnswer" }));
+    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendAnswer", answer: answer }));
   };
 
   //共通部分
   const [nickname, setNickname] = useState("");
   const [isNicknameSent, setIsNicknameSent] = useState(false);
+  const [choseName, setChoseName] = useState(false);
   const sendName = () => {
     ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
@@ -55,7 +59,14 @@ function HostView({
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
   };
   const goodName = () => {
-    ws.send(JSON.stringify({ type: "gameStage", gameStage: "choseName" }));
+    ws.send(
+      JSON.stringify({
+        type: "gameStage",
+        gameStage: "choseName",
+        choseName: nickname,
+      })
+    );
+    setChoseName(true);
   };
 
   return (
@@ -87,12 +98,17 @@ function HostView({
       {contentStarted && gameStage === "waitingAnswer" && (
         <>
           <div>質問に答えよう</div>
+          <div>{questions.map((index)=>{
+            return <div key={index}>{index}</div>
+          })}</div>
+          <input type="text" value={answer} onChange={(e)=>{setAnswer(e.target.value)}}/>
           <button onClick={sendAnswer}>回答送信</button>
         </>
       )}
       {contentStarted && gameStage === "thinkingName" && (
         <>
           <div>あだ名を考えよう</div>
+          <div>キーワード: {keyword}</div>
           {!isNicknameSent ? (
             <form
               onSubmit={(e) => {
@@ -114,19 +130,36 @@ function HostView({
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
-          <div>あだ名を選ぼう</div>
-          <ul>
-            {[...new Set(nicknames)].map((nickname, index) => (
-              <li key={index}>{nickname}</li>
-            ))}
-          </ul>
-          <button onClick={badName}>もう一度</button>
-          <button onClick={goodName}>きにいった</button>
+          {!choseName ? (
+            <>
+              <div>あだ名を選ぼう</div>
+              <ul>
+                {[...new Set(nicknames)].map((nickname, index) => (
+                  <li key={index}>
+                    <button onClick={() => goodName(nickname)}>
+                      {nickname}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <button onClick={badName}>もう一度</button>
+              <button>ひらめいた</button>
+            </>
+          ) : (
+            <p>選択済みです</p>
+          )}
         </>
       )}
       {contentStarted && gameStage === "showResult" && (
         <>
           <div>けっかはこんな感じ</div>
+          <ul>
+            {Object.keys(votes).map((nickname, index) => (
+              <li key={index}>
+                {nickname}: {votes[nickname]}
+              </li>
+            ))}
+          </ul>
         </>
       )}
       {contentStarted && gameStage === "gameOver" && (
