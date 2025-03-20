@@ -84,10 +84,16 @@ function UserView({
 
       {contentStarted && gameStage === "waitingQuestion" && (
         <div>
-          {imageData && <img src={imageData} alt="プロフ画像" />}
           {!isQuestionSent ? (
             <div class="children">
               <div class="children_space">
+                {imageData && (
+                  <img
+                    style={{ width: "100%" }}
+                    src={imageData}
+                    alt="プロフ画像"
+                  />
+                )}
                 <div>{hostName}さんに質問しよう</div>
                 <input
                   type="text"
@@ -104,9 +110,15 @@ function UserView({
       )}
       {contentStarted && gameStage === "waitingAnswer" && (
         <div>
-          {imageData && <img src={imageData} alt="プロフ画像" />}
           <div class="children">
             <div class="children_space">
+              {imageData && (
+                <img
+                  style={{ width: "100%" }}
+                  src={imageData}
+                  alt="プロフ画像"
+                />
+              )}
               <div>送った質問</div>
               <div>
                 {questions.map((index) => {
@@ -182,7 +194,6 @@ function UserView({
                 </li>
               ))}
             </ul>
-            <p>8秒後に画面が変わる</p>
           </div>
         </div>
       )}
