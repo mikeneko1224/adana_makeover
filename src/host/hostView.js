@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import MakeRoom from "./make_room";
+import "styles/wait.css";
 
 function HostView({
   contentStarted,
@@ -13,7 +14,7 @@ function HostView({
   nicknames,
   votes,
   questions,
-  keyword
+  keyword,
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -43,7 +44,13 @@ function HostView({
   };
   const [answer, setAnswer] = useState("");
   const sendAnswer = () => {
-    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendAnswer", answer: answer }));
+    ws.send(
+      JSON.stringify({
+        type: "gameStage",
+        gameStage: "sendAnswer",
+        answer: answer,
+      })
+    );
   };
 
   //共通部分
@@ -71,9 +78,7 @@ function HostView({
   };
 
   return (
-    <div>
-      <h2>ホスト画面</h2>
-
+    <div class="children">
       {!contentStarted && (
         <>
           <MakeRoom
@@ -86,23 +91,42 @@ function HostView({
         </>
       )}
       {contentStarted && gameStage === "waitingImage" && (
-        <>
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-          <button onClick={sendImage}>プロフ画像を送信</button>
-        </>
+        <div className="children_space">
+          <label htmlFor="file-upload" className="file-upload-label">
+            <div className="file-upload-button">送る写真を選んでね！</div>
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="file-upload-input"
+          />
+          <button onClick={sendImage} className="send-button">
+            プロフ画像を送信
+          </button>
+        </div>
       )}
       {contentStarted && gameStage === "waitingQuestion" && (
-        <>
-          <div>質問を待ってるよ</div>
-        </>
+        <div class="children_space">
+          <div class="text">質問を待ってるよ</div>
+        </div>
       )}
       {contentStarted && gameStage === "waitingAnswer" && (
         <>
           <div>質問に答えよう</div>
-          <div>{questions.map((index)=>{
-            return <div key={index}>{index}</div>
-          })}</div>
-          <input type="text" value={answer} onChange={(e)=>{setAnswer(e.target.value)}}/>
+          <div>
+            {questions.map((index) => {
+              return <div key={index}>{index}</div>;
+            })}
+          </div>
+          <input
+            type="text"
+            value={answer}
+            onChange={(e) => {
+              setAnswer(e.target.value);
+            }}
+          />
           <button onClick={sendAnswer}>回答送信</button>
         </>
       )}
