@@ -77,7 +77,8 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                         questionsCount[room_id] = 0
                 elif data["gameStage"] == "sendAnswer":
                     answer[room_id] = data["answer"]
-                    await broadcast_message(room_id, {"type": "gameStage", "gameStage": "thinkingName", "keyword": data["answer"]})
+                    await broadcast_message(room_id, {"type": "keyword", "keyword": answer[room_id]})
+                    await broadcast_message(room_id, {"type": "gameStage", "gameStage": "thinkingName"})
                 elif data["gameStage"] == "sendName":
                     nameCounts[room_id] += 1
                     print(f"送信済みの人数: {nameCounts[room_id]}")
