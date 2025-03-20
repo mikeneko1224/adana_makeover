@@ -87,7 +87,7 @@ function Room() {
   return (
     <div className="Room">
       <Header />
-      <h1>{hostName}さんのあだ名を考える部屋</h1>
+      <h1 class="room_title">〜{hostName}さんのあだ名を考える部屋〜</h1>
 
       {isHost ? (
         <HostView

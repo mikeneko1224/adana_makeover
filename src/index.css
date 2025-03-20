@@ -14,11 +14,27 @@ code {
 }
 
 .children {
-  text-align: center;
-  width: 40%;
+  width: 55%;
   border: solid;
   border-color: #ee82ee;
   background-color: white;
   border-radius: 10px;
   margin: 0 auto;
+}
+
+.children_space {
+  margin: 0 auto;
+  width: 80%;
+  padding: 20px 0px;
+}
+
+.text {
+  font-size: 20px;
+  padding-bottom: 10px;
+  color: #9932cc;
+}
+
+.room_title {
+  display: flex;
+  justify-content: center;
 }

@@ -11,4 +11,51 @@
 .invite_form {
   display: flex;
   justify-content: center;
+  width: 100%;
+}
+
+.URL_form {
+  width: 80%;
+  padding: 10px;
+}
+
+.copy_button {
+  width: 20%; /* ボタンの横幅を20%に設定 */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #ffb2ff; /* 任意でボタンの背景色 */
+  color: white; /* ボタンの文字色 */
+  font-weight: bold;
+}
+
+.copy_message {
+  color: green;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: bold;
+  visibility: hidden;
+}
+
+.number_block {
+  display: flex;
+  margin-top: 30px;
+  align-items: baseline;
+}
+
+.number_people {
+  font-size: 30px; /* フォントサイズを指定 */
+  font-weight: bold; /* フォントを太字に */
+}
+
+.start_button {
+  margin-top: 30px;
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  background: linear-gradient(to right, #ffb2ff, #d8b2ff);
+
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
 }

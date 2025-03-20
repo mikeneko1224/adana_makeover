@@ -1,5 +1,4 @@
 .input_space {
-  text-align: center;
   width: 40%;
   border: solid;
   border-color: #ee82ee;
@@ -9,9 +8,30 @@
 }
 
 .text_input {
+  margin: 0 auto;
+  width: 80%;
   padding: 20px 0px;
 }
 
+.form {
+  width: 100%;
+  height: 40px;
+}
+
+.button_block {
+  display: flex;
+  justify-content: center;
+  margin: 10px auto;
+  width: 80%;
+}
+
 .decide_button {
-  margin-bottom: 20px;
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 15px;
+  background: linear-gradient(to right, #ffb2ff, #d8b2ff);
+
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
 }
