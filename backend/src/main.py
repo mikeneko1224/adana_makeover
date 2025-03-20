@@ -45,7 +45,7 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             print(f"Received message: {data}")
 
             if "name" in data:
-                print(f"{data["name"]} join room")
+                print(f"{data['name']} join room")
 
 # websocket.send_textはフロントにデータを送る
 # if data["type"] == "join":はフロントからのデータがjoinだった場合でHostを判断
