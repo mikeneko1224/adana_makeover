@@ -35,3 +35,22 @@
   font-size: 20px;
   font-weight: bold;
 }
+
+/* スマートフォン用のスタイル */
+@media screen and (max-width: 600px) {
+  .text_input {
+    margin: 0 auto;
+    width: 80%;
+  }
+
+  .decide_button {
+    width: 100%;
+    padding: 3px 0px;
+    border-radius: 15px;
+    background: linear-gradient(to right, #ffb2ff, #d8b2ff);
+
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}

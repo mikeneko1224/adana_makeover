@@ -23,7 +23,7 @@
   width: 20%; /* ボタンの横幅を20%に設定 */
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid black;
   background-color: #ffb2ff; /* 任意でボタンの背景色 */
   color: white; /* ボタンの文字色 */
   font-weight: bold;
@@ -58,4 +58,28 @@
   color: white;
   font-size: 20px;
   font-weight: bold;
+}
+
+.URL_form {
+  width: 70%;
+  font-size: 12px;
+}
+
+.copy_button {
+  width: 30%; /* ボタンの横幅を20%に設定 */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: #ffb2ff; /* 任意でボタンの背景色 */
+  color: white; /* ボタンの文字色 */
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.copy_message {
+  color: green;
+  font-size: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+  visibility: hidden;
 }

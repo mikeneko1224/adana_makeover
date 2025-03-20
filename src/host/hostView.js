@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import MakeRoom from "./make_room";
+import "styles/wait.css";
 
 function HostView({
   contentStarted,
@@ -90,9 +91,20 @@ function HostView({
         </>
       )}
       {contentStarted && gameStage === "waitingImage" && (
-        <div class="children_space">
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-          <button onClick={sendImage}>プロフ画像を送信</button>
+        <div className="children_space">
+          <label htmlFor="file-upload" className="file-upload-label">
+            <div className="file-upload-button">送る写真を選んでね！</div>
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="file-upload-input"
+          />
+          <button onClick={sendImage} className="send-button">
+            プロフ画像を送信
+          </button>
         </div>
       )}
       {contentStarted && gameStage === "waitingQuestion" && (

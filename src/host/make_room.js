@@ -27,7 +27,7 @@ export default function MakeRoom({
           </div>
           <div className="invite_form">
             <input class="URL_form" type="text" value={inviteLink} />
-            <button onClick={copy_text} class="copy_button">
+            <button onClick={copy_text} class="copy_button cursol_pointer">
               コピー
             </button>
           </div>
