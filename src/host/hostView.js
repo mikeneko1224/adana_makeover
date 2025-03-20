@@ -58,7 +58,7 @@ function HostView({
   };
 
   return (
-    <div>
+    <div class="children">
       <h2>ホスト画面</h2>
 
       {!contentStarted && (

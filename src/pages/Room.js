@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import HostView from "../host/hostView";
 import UserView from "../user/userView";
+import { Header } from "component/header";
 
 function Room() {
   const { roomId } = useParams();
@@ -69,8 +70,8 @@ function Room() {
 
   return (
     <div className="Room">
+      <Header />
       <h1>{hostName}さんのあだ名を考える部屋</h1>
-      <h2>オンライン人数: {onlineCount}</h2>
 
       {isHost ? (
         <HostView
