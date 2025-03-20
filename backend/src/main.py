@@ -15,6 +15,7 @@ answer: Dict[str, str] = {}
 nameCounts: Dict[str, int] = {}
 votes: Dict[str, Dict[str, int]] = {}
 badCount: Dict[str, int] = {}
+contentStarted: Dict[str, bool] = {}
 
 # ルームの初期化
 def initialize_room(room_id: str):
@@ -34,12 +35,15 @@ def initialize_room(room_id: str):
         questionsCount[room_id] = 0
     if room_id not in answer:
         answer[room_id] = ""
+    if room_id not in contentStarted:
+        contentStarted[room_id] = False
 
 # メッセージの処理
 async def handle_message(data: dict, websocket: WebSocket, room_id: str):
     if data["type"] == "join":
         await handle_join(data, websocket, room_id)
     elif data["type"] == "startContent":
+        contentStarted[room_id] = True
         await broadcast_message(room_id, {"type": "contentStarted"})
     elif data["type"] == "gameStage":
         await handle_game_stage(data, room_id)
@@ -96,14 +100,14 @@ async def handle_vote(data: dict, room_id: str):
         if sum(votes[room_id].values()) <= badCount[room_id]:
             await broadcast_message(room_id, {"type": "result", "result": votes[room_id], "badCount": badCount[room_id]})
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(8)
+            await asyncio.sleep(15)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
             badCount[room_id] = 0
             votes[room_id] = {}
         else:
             await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(8)
+            await asyncio.sleep(15)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "gameOver"})
             badCount[room_id] = 0
 
@@ -123,6 +127,12 @@ async def broadcast_message(room_id: str, message: dict):
 async def websocket_endpoint(websocket: WebSocket, room_id: str):
     await websocket.accept()
     initialize_room(room_id)
+
+    if room_id in contentStarted and contentStarted[room_id]:
+        await websocket.send_text(json.dumps({"type": "error", "message": "Game already started"}))
+        await websocket.close()
+        return
+
     rooms[room_id].append(websocket)
     print(f"User connected to room {room_id}. Current users in room: {len(rooms[room_id])}")
 
@@ -145,3 +155,5 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             del badCount[room_id]
             del questions[room_id]
             del questionsCount[room_id]
+            del answer[room_id]
+            del contentStarted[room_id]

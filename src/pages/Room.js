@@ -37,6 +37,13 @@ function Room() {
       websocket.onmessage = (event) => {
         const message = JSON.parse(event.data);
         console.log("Received message from server:", message);
+
+        if (message.type === "error") {
+          alert(message.message);
+          websocket.close();
+          return;
+        }
+
         if (message.type === "onlineCount") {
           setOnlineCount(message.count);
         } else if (message.type === "host") {
