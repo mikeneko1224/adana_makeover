@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React ,{ useState, useEffect, use} from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
 
@@ -16,7 +15,20 @@ function HostView({
   questions,
   keyword,
 }) {
+  const initialState = () => {
+    setIsNicknameSent(false);
+    setChoseName(false);
+    setNickname("");
+    setAnswer("");
+  };
+  useEffect(() => {
+    if (gameStage === "showResult") {
+      initialState();
+    }
+  },[gameStage]);
+
   const [selectedFile, setSelectedFile] = useState(null);
+  const [answer, setAnswer] = useState("");
 
   //ホストのみの操作
   const handleImageUpload = (event) => {
@@ -42,7 +54,7 @@ function HostView({
       reader.readAsDataURL(selectedFile);
     }
   };
-  const [answer, setAnswer] = useState("");
+  
   const sendAnswer = () => {
     ws.send(
       JSON.stringify({

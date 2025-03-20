@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React , { useState, useEffect } from "react";
 
 function UserView({
   contentStarted,
@@ -12,6 +11,18 @@ function UserView({
   questions,
   keyword,
 }) {
+  const initialState = () => {
+    setIsQuestionSent(false);
+    setIsNicknameSent(false);
+    setChoseName(false);
+    setNickname("");
+  };
+  useEffect(() => {
+    if (gameStage === "showResult") {
+      initialState();
+    }
+  }, [gameStage]);
+
   //ユーザーのみの操作
   const [question, setQuestion] = useState("");
   const [isQuestionSent, setIsQuestionSent] = useState(false);
