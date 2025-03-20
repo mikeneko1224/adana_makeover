@@ -19,6 +19,7 @@ function HostView({
     setIsNicknameSent(false);
     setChoseName(false);
     setNickname("");
+    setAnswer("");
   };
   useEffect(() => {
     if (gameStage === "showResult") {
