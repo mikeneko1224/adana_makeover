@@ -10,7 +10,7 @@ function UserView({
   nicknames,
   votes,
   questions,
-  keyword
+  keyword,
 }) {
   //ユーザーのみの操作
   const [question, setQuestion] = useState("");
@@ -54,29 +54,38 @@ function UserView({
 
   return (
     <div>
-      <h2>ユーザー画面</h2>
       {!contentStarted && (
-        <div>{hostName}さんがスタートを押すのを待ってるよ</div>
-      )}
-      {contentStarted && gameStage === "waitingImage" && (
-        <div>
-          <div>{hostName}さんのプロフ画像を待ってるよ</div>
-          {imageData && <img src={imageData} alt="プロフ画像" />}
+        <div class="children">
+          <div class="children_space">
+            <div>{hostName}さんがスタートを押すのを待ってるよ</div>
+          </div>
         </div>
       )}
+
+      {contentStarted && gameStage === "waitingImage" && (
+        <div class="children">
+          <div class="children_space">
+            <div>{hostName}さんのプロフ画像を待ってるよ</div>
+            {imageData && <img src={imageData} alt="プロフ画像" />}
+          </div>
+        </div>
+      )}
+
       {contentStarted && gameStage === "waitingQuestion" && (
         <div>
           {imageData && <img src={imageData} alt="プロフ画像" />}
           {!isQuestionSent ? (
-            <>
-              <div>{hostName}さんに質問しよう</div>
-              <input
-                type="text"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-              <button onClick={sendQuestion}>質問送信</button>
-            </>
+            <div class="children">
+              <div class="children_space">
+                <div>{hostName}さんに質問しよう</div>
+                <input
+                  type="text"
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                />
+                <button onClick={sendQuestion}>質問送信</button>
+              </div>
+            </div>
           ) : (
             <p>送信済み</p>
           )}
@@ -85,75 +94,93 @@ function UserView({
       {contentStarted && gameStage === "waitingAnswer" && (
         <div>
           {imageData && <img src={imageData} alt="プロフ画像" />}
-          <div>送った質問</div>
-          <div>{questions.map((index)=>{
-            return <div key={index}>{index}</div>
-          })}</div>
-          <div>{hostName}さんの回答を待っているよ</div>
+          <div class="children">
+            <div class="children_space">
+              <div>送った質問</div>
+              <div>
+                {questions.map((index) => {
+                  return <div key={index}>{index}</div>;
+                })}
+              </div>
+              <div>{hostName}さんの回答を待っているよ</div>
+            </div>
+          </div>
         </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
-        <>
-          <div>あだ名を考えよう</div>
-          <div>キーワード: {keyword}</div>
-          {!isNicknameSent ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendName();
-              }}
-            >
-              <input
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-              />
-              <button type="submit">あだ名送信</button>
-            </form>
-          ) : (
-            <p>送信済み</p>
-          )}
-        </>
+        <div class="children">
+          <div class="children_space">
+            <div>あだ名を考えよう</div>
+            <div>キーワード: {keyword}</div>
+            {!isNicknameSent ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendName();
+                }}
+              >
+                <input
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                />
+                <button type="submit">あだ名送信</button>
+              </form>
+            ) : (
+              <p>送信済み</p>
+            )}
+          </div>
+        </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
           {!choseName ? (
-            <>
-              <div>あだ名を選ぼう</div>
-              <ul>
-                {[...new Set(nicknames)].map((nickname, index) => (
-                  <li key={index}>
-                    <button onClick={() => goodName(nickname)}>
-                      {nickname}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <button onClick={badName}>もう一度</button>
-              <button>ひらめいた</button>
-            </>
+            <div class="children">
+              <div class="children_space">
+                <div>あだ名を選ぼう</div>
+                <ul>
+                  {[...new Set(nicknames)].map((nickname, index) => (
+                    <li key={index}>
+                      <button onClick={() => goodName(nickname)}>
+                        {nickname}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={badName}>もう一度</button>
+                <button>ひらめいた</button>
+              </div>
+            </div>
           ) : (
-            <p>選択済みです</p>
+            <div class="children">
+              <div class="children_space">
+                <p>選択済みです</p>
+              </div>
+            </div>
           )}
         </>
       )}
       {contentStarted && gameStage === "showResult" && (
-        <>
-          <div>けっかはこんな感じ</div>
-          <ul>
-            {Object.keys(votes).map((nickname, index) => (
-              <li key={index}>
-                {nickname}: {votes[nickname]}
-              </li>
-            ))}
-          </ul>
-          <p>8秒後に画面が変わる</p>
-        </>
+        <div class="children">
+          <div class="children_space">
+            <div>けっかはこんな感じ</div>
+            <ul>
+              {Object.keys(votes).map((nickname, index) => (
+                <li key={index}>
+                  {nickname}: {votes[nickname]}
+                </li>
+              ))}
+            </ul>
+            <p>8秒後に画面が変わる</p>
+          </div>
+        </div>
       )}
       {contentStarted && gameStage === "gameOver" && (
-        <>
-          <div>ゲーム終了</div>
-        </>
+        <div class="children">
+          <div class="children_space">
+            <div>ゲーム終了</div>
+          </div>
+        </div>
       )}
     </div>
   );
