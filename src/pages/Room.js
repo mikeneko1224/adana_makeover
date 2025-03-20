@@ -14,12 +14,19 @@ function Room() {
   const [hostName, setHostName] = useState("");
   const [gameStage, setGameStage] = useState("notStarted");
   const [imageData, setImageData] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [nicknames, setNicknames] = useState([]);
+  const [votes, setVotes] = useState([]);
 
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
     const name = location.state?.name || "匿名";
 
     if (roomId) {
+      //デプロイ時はこっち
+      // const websocket = new WebSocket(`wss://adana-makeover.onrender.com/ws/${roomId}`);
+      //ローカルで動かすときはこっち
       const websocket = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
 
       websocket.onopen = () => {
@@ -48,6 +55,15 @@ function Room() {
           }
         } else if (message.type === "image") {
           setImageData(message.image);
+        } else if (message.type === "questions") {
+          setQuestions(message.questions);
+        } else if (message.type === "keyword") {
+          setKeyword(message.keyword);
+        } else if (message.type === "nicknames") {
+          console.log(message.nicknames);
+          setNicknames(message.nicknames);
+        } else if (message.type === "votes") {
+          setVotes(message.votes);
         }
       };
 
@@ -83,6 +99,10 @@ function Room() {
           gameStage={gameStage}
           ws={ws}
           imageData={imageData}
+          questions={questions}
+          keyword={keyword}
+          nicknames={nicknames}
+          votes={votes}
         />
       ) : (
         <UserView
@@ -92,6 +112,10 @@ function Room() {
           gameStage={gameStage}
           ws={ws}
           imageData={imageData}
+          questions={questions}
+          keyword={keyword}
+          nicknames={nicknames}
+          votes={votes}
         />
       )}
     </div>

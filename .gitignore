@@ -27,3 +27,4 @@ __pycache__/
 
 # local files
 backend/websocket_adana
+backend/src/__pycache__
