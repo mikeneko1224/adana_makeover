@@ -92,7 +92,7 @@ function HostView({
       )}
       {contentStarted && gameStage === "waitingImage" && (
         <div className="children_space">
-          <label htmlFor="file-upload" className="file-upload-label">
+          <label htmlFor="file-upload" class="file-upload-label">
             <div className="file-upload-button">送る写真を選んでね！</div>
           </label>
           <input
@@ -102,6 +102,17 @@ function HostView({
             onChange={handleImageUpload}
             className="file-upload-input"
           />
+          {!selectedFile && <p>ファイルを選んでください。</p>}
+          {selectedFile && (
+            <div className="image-preview">
+              <p>選択したファイル：{selectedFile.name}</p>
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt="選択した画像"
+                className="preview-image"
+              />
+            </div>
+          )}
           <button onClick={sendImage} className="send-button">
             プロフ画像を送信
           </button>
@@ -113,7 +124,7 @@ function HostView({
         </div>
       )}
       {contentStarted && gameStage === "waitingAnswer" && (
-        <>
+        <div class="children_space">
           <div>質問に答えよう</div>
           <div>
             {questions.map((index) => {
@@ -128,10 +139,10 @@ function HostView({
             }}
           />
           <button onClick={sendAnswer}>回答送信</button>
-        </>
+        </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
-        <>
+        <div class="children_space">
           <div>あだ名を考えよう</div>
           <div>キーワード: {keyword}</div>
           {!isNicknameSent ? (
@@ -151,12 +162,12 @@ function HostView({
           ) : (
             <p>送信済み</p>
           )}
-        </>
+        </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
           {!choseName ? (
-            <>
+            <div class="children_space">
               <div>あだ名を選ぼう</div>
               <ul>
                 {[...new Set(nicknames)].map((nickname, index) => (
@@ -169,14 +180,14 @@ function HostView({
               </ul>
               <button onClick={badName}>もう一度</button>
               <button>ひらめいた</button>
-            </>
+            </div>
           ) : (
             <p>選択済みです</p>
           )}
         </>
       )}
       {contentStarted && gameStage === "showResult" && (
-        <>
+        <div class="children_space">
           <div>けっかはこんな感じ</div>
           <ul>
             {Object.keys(votes).map((nickname, index) => (
@@ -185,12 +196,12 @@ function HostView({
               </li>
             ))}
           </ul>
-        </>
+        </div>
       )}
       {contentStarted && gameStage === "gameOver" && (
-        <>
+        <div class="children_space">
           <div>終了</div>
-        </>
+        </div>
       )}
     </div>
   );
