@@ -1,7 +1,7 @@
 import "styles/App.css";
 import { Header } from "component/header";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function App() {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ function App() {
 
   const createRoom = () => {
     const newRoomId = Math.random().toString(36).substring(2, 15);
-    navigate(`/room/${newRoomId}`,{state: {name: name}});
+    navigate(`/room/${newRoomId}`, { state: { name: name } });
   };
 
   const handleNameSubmit = () => {
@@ -23,8 +23,9 @@ function App() {
       <Header />
       <div className="children">
         <div className="text_input">
-          <div>名前を入力してね！</div>
+          <div class="text">名前を入力してね！</div>
           <input
+            class="form"
             type="text"
             name="text"
             placeholder="例: 田中 花子"
@@ -32,7 +33,11 @@ function App() {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <button onClick={handleNameSubmit}>決定！！</button>
+        <div class="button_block">
+          <button class="decide_button" onClick={handleNameSubmit}>
+            決定！！
+          </button>
+        </div>
       </div>
     </div>
   );

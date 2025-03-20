@@ -5,3 +5,13 @@
   font-weight: bold;
   padding: 40px 0px;
 }
+
+@media screen and (max-width: 600px) {
+  .Header {
+    text-align: center;
+    font-size: 30px;
+    color: #ffb3ff;
+    font-weight: bold;
+    padding: 40px 0px;
+  }
+}

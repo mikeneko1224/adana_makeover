@@ -1,3 +1,8 @@
 .text {
   text-align: center;
 }
+
+/* ファイル選択ボタンは非表示 */
+.file-upload-input {
+  display: none;
+}
