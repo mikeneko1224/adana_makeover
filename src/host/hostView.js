@@ -1,22 +1,6 @@
-import React ,{ useState, useReducer } from "react";
+import React ,{ useState, useEffect, use} from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
-
-const initialState = {
-  isNicknameSent: false,
-  choseName: false,
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "SET_NICKNAME_SENT":
-      return { ...state, isNicknameSent: true };
-    case "SET_CHOSE_NAME":
-      return { ...state, choseName: true };
-    default:
-      return state;
-  }
-}
 
 function HostView({
   contentStarted,
@@ -31,6 +15,17 @@ function HostView({
   questions,
   keyword,
 }) {
+  const initialState = () => {
+    setIsNicknameSent(false);
+    setChoseName(false);
+    setNickname("");
+  };
+  useEffect(() => {
+    if (gameStage === "showResult") {
+      initialState();
+    }
+  },[gameStage]);
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [answer, setAnswer] = useState("");
 
@@ -70,7 +65,6 @@ function HostView({
   };
 
   //共通部分
-  const [state, dispatch] = useReducer(reducer, initialState);
   const [nickname, setNickname] = useState("");
   const [isNicknameSent, setIsNicknameSent] = useState(false);
   const [choseName, setChoseName] = useState(false);
