@@ -24,6 +24,7 @@ function HostView({
     setAnswer("");
     setNickname("");
     setIsNicknameSent(false);
+    setAudioPlayed(false);
   };
   useEffect(() => {
     if (gameStage === "showResult") {
@@ -98,6 +99,15 @@ function HostView({
       setIsNicknameSent(true);
     }
   }, [remainingTime, isNicknameSent]);
+
+  const [audioPlayed, setAudioPlayed] = useState(false);
+  useEffect(() => {
+    if (bonusTimeUsed && !audioPlayed) {
+      const audio = new Audio("/bonusTimeStart.wav");
+      audio.play();
+      setAudioPlayed(true);
+    }
+  });
 
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
