@@ -3,9 +3,9 @@
 }
 
 /* ファイル選択ボタンは非表示 */
-.file-upload-input {
+ .file-upload-input {
   display: none;
-}
+} 
 
 .file-upload-label {
   display: inline-block;
