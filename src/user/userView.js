@@ -119,7 +119,7 @@ function UserView({
                     alt="プロフ画像"
                   />
                 )}
-                <div>{hostName}さんに質問しよう</div>
+                <div class="text">{hostName}さんに質問しよう！！</div>
                 <input
                   type="text"
                   value={question}
@@ -213,7 +213,7 @@ function UserView({
       {contentStarted && gameStage === "showResult" && (
         <div class="children">
           <div class="children_space">
-            <div>けっかはこんな感じ</div>
+            <div class="text">けっかはこんな感じ</div>
             <ul>
               {Object.keys(votes).map((nickname, index) => (
                 <li key={index}>
@@ -227,7 +227,7 @@ function UserView({
       {contentStarted && gameStage === "gameOver" && (
         <div class="children">
           <div class="children_space">
-            <div>ゲーム終了</div>
+            <div class="text">ゲーム終了</div>
           </div>
         </div>
       )}
