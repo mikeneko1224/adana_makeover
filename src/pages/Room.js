@@ -32,13 +32,11 @@ function Room() {
       const websocket = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
 
       websocket.onopen = () => {
-        console.log("Connected to server");
         websocket.send(JSON.stringify({ type: "join", name }));
       };
 
       websocket.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        console.log("Received message from server:", message);
 
         if (message.type === "error") {
           alert(message.message);
@@ -69,7 +67,6 @@ function Room() {
         } else if (message.type === "keyword") {
           setKeyword(message.keyword);
         } else if (message.type === "nicknames") {
-          console.log(message.nicknames);
           setNicknames(message.nicknames);
         } else if (message.type === "votes") {
           setVotes(message.votes);
@@ -83,7 +80,6 @@ function Room() {
       setWs(websocket);
 
       return () => {
-        console.log("Disconnected from server");
         websocket.close();
       };
     }
@@ -100,8 +96,6 @@ function Room() {
   return (
     <div className="Room">
       <Header />
-      <h1 class="room_title">〜{hostName}さんのあだ名を考える部屋〜</h1>
-
       {isHost ? (
         <HostView
           contentStarted={contentStarted}

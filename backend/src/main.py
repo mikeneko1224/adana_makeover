@@ -90,7 +90,6 @@ async def handle_game_stage(data: dict, room_id: str):
         asyncio.create_task(countDown(room_id))  # 非同期タスクとして実行
     elif data["gameStage"] == "sendName":
         nameCounts[room_id] += 1
-        print("送信済み人数",nameCounts[room_id])
         if nameCounts[room_id] == len(rooms[room_id]):
             votes[room_id] = {nickname: 0 for nickname in nicknames[room_id]}
             await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
@@ -156,7 +155,19 @@ async def handle_vote(data: dict, room_id: str):
 async def handle_nickname(data: dict, room_id: str):
     nicknames[room_id].append(data["nickname"])
     nicknames[room_id] = list(set(nicknames[room_id]))
-    await broadcast_message(room_id, {"type": "nickname", "nickname": data["nickname"]})
+    await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
+    print(f"Nicknames in room {room_id}: {nicknames[room_id]}")
+
+    if room_id not in votes:
+        votes[room_id] = {}
+    for nickname in nicknames[room_id]:
+        if nickname not in votes[room_id]:
+            votes[room_id][nickname] = 0
+
+    await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
+    await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id]})
+    print(f"Votes in room {room_id}: {votes[room_id]}")
+
 
 # 全ユーザーにメッセージを送信
 async def broadcast_message(room_id: str, message: dict):
@@ -175,7 +186,6 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
         return
 
     rooms[room_id].append(websocket)
-    print(f"User connected to room {room_id}. Current users in room: {len(rooms[room_id])}")
 
     try:
         while True:
@@ -186,7 +196,6 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
     except WebSocketDisconnect:
         rooms[room_id].remove(websocket)
         await broadcast_message(room_id, {"type": "onlineCount", "count": len(rooms[room_id])})
-        print(f"User disconnected from room {room_id}. Current users in room: {len(rooms[room_id])}")
         if not rooms[room_id]:
             del rooms[room_id]
             del hosts[room_id]
