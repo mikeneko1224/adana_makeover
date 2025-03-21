@@ -87,7 +87,7 @@ async def handle_game_stage(data: dict, room_id: str):
         answer[room_id] = data["answer"]
         await broadcast_message(room_id, {"type": "keyword", "keyword": answer[room_id]})
         await broadcast_message(room_id, {"type": "gameStage", "gameStage": "thinkingName"})
-        asyncio.create_task(countDown(room_id))  # 非同期タスクとして実行
+        asyncio.create_task(countDown(room_id))
     elif data["gameStage"] == "sendName":
         nameCounts[room_id] += 1
         if nameCounts[room_id] == len(rooms[room_id]):
@@ -153,20 +153,21 @@ async def handle_vote(data: dict, room_id: str):
 
 # みんなが考えたあだ名をnicknamesに
 async def handle_nickname(data: dict, room_id: str):
-    nicknames[room_id].append(data["nickname"])
-    nicknames[room_id] = list(set(nicknames[room_id]))
-    await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
-    print(f"Nicknames in room {room_id}: {nicknames[room_id]}")
+    if "nickname" in data and data["nickname"].strip():
+        nicknames[room_id].append(data["nickname"].strip())  # 前後の空白を削除して追加
+        nicknames[room_id] = list(set(nicknames[room_id]))  # 重複を排除
+        await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
+        print(f"Nicknames in room {room_id}: {nicknames[room_id]}")
 
-    if room_id not in votes:
-        votes[room_id] = {}
-    for nickname in nicknames[room_id]:
-        if nickname not in votes[room_id]:
-            votes[room_id][nickname] = 0
+        if room_id not in votes:
+            votes[room_id] = {}
+        for nickname in nicknames[room_id]:
+            if nickname not in votes[room_id]:
+                votes[room_id][nickname] = 0
 
-    await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
-    await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id]})
-    print(f"Votes in room {room_id}: {votes[room_id]}")
+        await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
+        await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id]})
+        print(f"Votes in room {room_id}: {votes[room_id]}")
 
 
 # 全ユーザーにメッセージを送信
