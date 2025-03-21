@@ -132,7 +132,6 @@ function Room() {
           bonusTimeUsed={bonusTimeUsed}
         />
       )}
-      
     </div>
   );
 }
