@@ -28,14 +28,14 @@ function App() {
             class="form"
             type="text"
             name="text"
-            placeholder="例: 田中 花子"
+            placeholder="例: 北神 未海"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div class="button_block">
           <button class="decide_button" onClick={handleNameSubmit}>
-            決定！！
+            決定☆彡
           </button>
         </div>
       </div>

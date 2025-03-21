@@ -127,7 +127,7 @@ function UserView({
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
-                <button onClick={sendQuestion}>質問送信</button>
+                <button class="send_question" onClick={sendQuestion}>質問送信</button>
               </div>
             </div>
           ) : (
