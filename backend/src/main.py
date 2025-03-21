@@ -129,6 +129,7 @@ async def countDown(room_id: str):
         elif remainingTime[room_id] <= 0 and bonusTimeUsed[room_id]:
             break
 
+    resetTimeReaming(room_id)
     isCounting[room_id] = False
 
 # 投票フェーズ用処理

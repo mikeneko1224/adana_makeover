@@ -118,6 +118,7 @@ function Room() {
           votes={votes}
           remainingTime={remainingTime}
           bonusTimeUsed={bonusTimeUsed}
+          isHost={isHost}
         />
       ) : (
         <UserView

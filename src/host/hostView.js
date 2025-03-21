@@ -17,6 +17,7 @@ function HostView({
   keyword,
   remainingTime,
   bonusTimeUsed,
+  isHost
 
 }) {
   const initialState = () => {
@@ -158,6 +159,7 @@ function HostView({
             keyword={keyword}
             ws={ws}
             gameStage={gameStage}
+            isHost={isHost}
           />
         </>
       )}
