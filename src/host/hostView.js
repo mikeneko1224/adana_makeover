@@ -177,12 +177,12 @@ function HostView({
 
       {contentStarted && gameStage === "waitingQuestion" && (
         <div class="children_space">
-          <div class="text">質問を待ってるよ</div>
+          <div class="text">質問を待ってるよ！</div>
         </div>
       )}
       {contentStarted && gameStage === "waitingAnswer" && (
         <div class="children_space">
-          <div>質問に答えよう</div>
+          <div class="text">質問に答えよう！</div>
           <div>
             {questions.map((index) => {
               return <div key={index}>{index}</div>;
@@ -191,11 +191,14 @@ function HostView({
           <input
             type="text"
             value={answer}
+            class="answer_form"
             onChange={(e) => {
               setAnswer(e.target.value);
             }}
           />
-          <button onClick={sendAnswer}>回答送信</button>
+          <button class="answer_button" onClick={sendAnswer}>
+            回答送信
+          </button>
         </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
