@@ -60,6 +60,37 @@ code {
   cursor: pointer;
 }
 
+.progress-container {
+  width: 70%;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 0 auto;
+  margin-bottom: 50px;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #4caf50;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
 /* スマートフォン用のスタイル */
 @media screen and (max-width: 600px) {
   .children {
