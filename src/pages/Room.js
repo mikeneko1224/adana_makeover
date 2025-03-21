@@ -18,6 +18,8 @@ function Room() {
   const [keyword, setKeyword] = useState("");
   const [nicknames, setNicknames] = useState([]);
   const [votes, setVotes] = useState([]);
+  const [remainingTime, setTimeRemaining] = useState(40);
+  const [bonusTimeUsed, setBonusTimeUsed] = useState(false);
 
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
@@ -71,6 +73,10 @@ function Room() {
           setNicknames(message.nicknames);
         } else if (message.type === "votes") {
           setVotes(message.votes);
+        } else if (message.type === "remainingTime") {
+          setTimeRemaining(message.remainingTime);
+        } else if (message.type === "bonusTimeUsed") {
+          setBonusTimeUsed(message.bonusTimeUsed);
         }
       };
 
@@ -110,6 +116,9 @@ function Room() {
           keyword={keyword}
           nicknames={nicknames}
           votes={votes}
+          remainingTime={remainingTime}
+          bonusTimeUsed={bonusTimeUsed}
+          isHost={isHost}
         />
       ) : (
         <UserView
@@ -123,6 +132,8 @@ function Room() {
           keyword={keyword}
           nicknames={nicknames}
           votes={votes}
+          remainingTime={remainingTime}
+          bonusTimeUsed={bonusTimeUsed}
         />
       )}
     </div>

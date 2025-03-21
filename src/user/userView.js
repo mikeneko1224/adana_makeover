@@ -1,4 +1,5 @@
-import React , { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import SendAdana from "../component/sendAdana";
 
 function UserView({
   contentStarted,
@@ -10,10 +11,12 @@ function UserView({
   votes,
   questions,
   keyword,
+  remainingTime,
+  bonusTimeUsed,
 }) {
   const initialState = () => {
+    setQuestion("");
     setIsQuestionSent(false);
-    setIsNicknameSent(false);
     setChoseName(false);
     setNickname("");
   };
@@ -41,13 +44,8 @@ function UserView({
 
   //共通部分
   const [nickname, setNickname] = useState("");
-  const [isNicknameSent, setIsNicknameSent] = useState(false);
   const [choseName, setChoseName] = useState(false);
-  const sendName = () => {
-    ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
-    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
-    setIsNicknameSent(true);
-  };
+
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
     setChoseName(true);
@@ -132,27 +130,13 @@ function UserView({
       )}
       {contentStarted && gameStage === "thinkingName" && (
         <div class="children">
-          <div class="children_space">
-            <div>あだ名を考えよう</div>
-            <div>キーワード: {keyword}</div>
-            {!isNicknameSent ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendName();
-                }}
-              >
-                <input
-                  type="text"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
-                />
-                <button type="submit">あだ名送信</button>
-              </form>
-            ) : (
-              <p>送信済み</p>
-            )}
-          </div>
+          <SendAdana
+            remainingTime={remainingTime}
+            bonusTimeUsed={bonusTimeUsed}
+            keyword={keyword}
+            ws={ws}
+            gameStage={gameStage}
+          />
         </div>
       )}
       {contentStarted && gameStage === "choosingName" && (

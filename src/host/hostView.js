@@ -1,6 +1,7 @@
-import React ,{ useState, useEffect, use} from "react";
+import React, { useState, useEffect } from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
+import SendAdana from "../component/sendAdana";
 
 function HostView({
   contentStarted,
@@ -14,21 +15,25 @@ function HostView({
   votes,
   questions,
   keyword,
+  remainingTime,
+  bonusTimeUsed,
+  isHost
+
 }) {
   const initialState = () => {
-    setIsNicknameSent(false);
     setChoseName(false);
-    setNickname("");
     setAnswer("");
+    setNickname("");
   };
   useEffect(() => {
     if (gameStage === "showResult") {
       initialState();
     }
-  },[gameStage]);
+  }, [gameStage]);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [answer, setAnswer] = useState("");
+  const [nickname, setNickname] = useState("");
 
   //ホストのみの操作
   const handleImageUpload = (event) => {
@@ -54,7 +59,7 @@ function HostView({
       reader.readAsDataURL(selectedFile);
     }
   };
-  
+
   const sendAnswer = () => {
     ws.send(
       JSON.stringify({
@@ -66,14 +71,7 @@ function HostView({
   };
 
   //共通部分
-  const [nickname, setNickname] = useState("");
-  const [isNicknameSent, setIsNicknameSent] = useState(false);
   const [choseName, setChoseName] = useState(false);
-  const sendName = () => {
-    ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
-    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
-    setIsNicknameSent(true);
-  };
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
     setChoseName(true);
@@ -154,27 +152,16 @@ function HostView({
         </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
-        <div class="children_space">
-          <div>あだ名を考えよう</div>
-          <div>キーワード: {keyword}</div>
-          {!isNicknameSent ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendName();
-              }}
-            >
-              <input
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-              />
-              <button type="submit">あだ名送信</button>
-            </form>
-          ) : (
-            <p>送信済み</p>
-          )}
-        </div>
+        <>
+          <SendAdana
+            remainingTime={remainingTime}
+            bonusTimeUsed={bonusTimeUsed}
+            keyword={keyword}
+            ws={ws}
+            gameStage={gameStage}
+            isHost={isHost}
+          />
+        </>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
