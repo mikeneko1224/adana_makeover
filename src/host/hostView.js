@@ -1,7 +1,7 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
+import Modal from "../component/modal";
 
 function HostView({
   contentStarted,
@@ -15,8 +15,25 @@ function HostView({
   votes,
   questions,
   keyword,
+  remainingTime,
+  bonusTimeUsed,
+  isHost,
 }) {
+  const initialState = () => {
+    setChoseName(false);
+    setAnswer("");
+    setNickname("");
+    setIsNicknameSent(false);
+  };
+  useEffect(() => {
+    if (gameStage === "showResult") {
+      initialState();
+    }
+  }, [gameStage]);
+
   const [selectedFile, setSelectedFile] = useState(null);
+  const [answer, setAnswer] = useState("");
+  const [nickname, setNickname] = useState("");
 
   //ホストのみの操作
   const handleImageUpload = (event) => {
@@ -36,13 +53,12 @@ function HostView({
           ws.send(
             JSON.stringify({ type: "gameStage", gameStage: "sendImage" })
           );
-          console.log("Sent image to server");
         }
       };
       reader.readAsDataURL(selectedFile);
     }
   };
-  const [answer, setAnswer] = useState("");
+
   const sendAnswer = () => {
     ws.send(
       JSON.stringify({
@@ -54,19 +70,40 @@ function HostView({
   };
 
   //共通部分
-  const [nickname, setNickname] = useState("");
   const [isNicknameSent, setIsNicknameSent] = useState(false);
   const [choseName, setChoseName] = useState(false);
-  const sendName = () => {
-    ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
+
+  const sendName = useCallback(() => {
+    if(nickname){
+      ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
+    }
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
     setIsNicknameSent(true);
-  };
+  }, [ws, nickname]);
+
+  useEffect(() => {
+    if (isHost) {
+      ws.send(
+        JSON.stringify({
+          type: "log",
+          remainingTime: remainingTime,
+          isNicknameSent: isNicknameSent,
+          bonusTimeUsed: bonusTimeUsed,
+        })
+      );
+    }
+    if (remainingTime <= 0 && !isNicknameSent && bonusTimeUsed) {
+      ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
+      ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
+      setIsNicknameSent(true);
+    }
+  }, [remainingTime, isNicknameSent]);
+
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
     setChoseName(true);
   };
-  const goodName = () => {
+  const goodName = (nickname) => {
     ws.send(
       JSON.stringify({
         type: "gameStage",
@@ -92,7 +129,7 @@ function HostView({
       )}
       {contentStarted && gameStage === "waitingImage" && (
         <div className="children_space">
-          <label htmlFor="file-upload" className="file-upload-label">
+          <label htmlFor="file-upload" class="file-upload-label">
             <div className="file-upload-button">送る写真を選んでね！</div>
           </label>
           <input
@@ -102,6 +139,17 @@ function HostView({
             onChange={handleImageUpload}
             className="file-upload-input"
           />
+          {!selectedFile && <p>ファイルを選んでください。</p>}
+          {selectedFile && (
+            <div className="image-preview">
+              <p>選択したファイル：{selectedFile.name}</p>
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt="選択した画像"
+                className="preview-image"
+              />
+            </div>
+          )}
           <button onClick={sendImage} className="send-button">
             プロフ画像を送信
           </button>
@@ -113,7 +161,7 @@ function HostView({
         </div>
       )}
       {contentStarted && gameStage === "waitingAnswer" && (
-        <>
+        <div class="children_space">
           <div>質問に答えよう</div>
           <div>
             {questions.map((index) => {
@@ -128,39 +176,41 @@ function HostView({
             }}
           />
           <button onClick={sendAnswer}>回答送信</button>
-        </>
+        </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
-        <>
-          <div>あだ名を考えよう</div>
-          <div>キーワード: {keyword}</div>
-          {!isNicknameSent ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendName();
-              }}
-            >
-              <input
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-              />
-              <button type="submit">あだ名送信</button>
-            </form>
-          ) : (
-            <p>送信済み</p>
-          )}
-        </>
+        <div class="children_space">
+        {bonusTimeUsed && <div>ボーナスタイム中！</div>}
+        <div>残り時間:{remainingTime}</div>
+        <div>あだ名を考えよう</div>
+        <div>キーワード: {keyword}</div>
+        {!isNicknameSent ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendName();
+            }}
+          >
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+            <button type="submit">あだ名送信</button>
+          </form>
+        ) : (
+          <p>送信済み</p>
+        )}
+      </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
           {!choseName ? (
-            <>
+            <div class="children_space">
               <div>あだ名を選ぼう</div>
               <ul>
-                {[...new Set(nicknames)].map((nickname, index) => (
-                  <li key={index}>
+                {nicknames.map((nickname, index) => (
+                  <li key={nickname}>
                     <button onClick={() => goodName(nickname)}>
                       {nickname}
                     </button>
@@ -168,15 +218,15 @@ function HostView({
                 ))}
               </ul>
               <button onClick={badName}>もう一度</button>
-              <button>ひらめいた</button>
-            </>
+              <Modal ws={ws} />
+            </div>
           ) : (
             <p>選択済みです</p>
           )}
         </>
       )}
       {contentStarted && gameStage === "showResult" && (
-        <>
+        <div class="children_space">
           <div>けっかはこんな感じ</div>
           <ul>
             {Object.keys(votes).map((nickname, index) => (
@@ -185,12 +235,12 @@ function HostView({
               </li>
             ))}
           </ul>
-        </>
+        </div>
       )}
       {contentStarted && gameStage === "gameOver" && (
-        <>
+        <div class="children_space">
           <div>終了</div>
-        </>
+        </div>
       )}
     </div>
   );
