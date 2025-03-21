@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
-import SendAdana from "../component/sendAdana";
 
 function HostView({
   contentStarted,
@@ -17,13 +16,13 @@ function HostView({
   keyword,
   remainingTime,
   bonusTimeUsed,
-  isHost
-
+  isHost,
 }) {
   const initialState = () => {
     setChoseName(false);
     setAnswer("");
     setNickname("");
+    setIsNicknameSent(false);
   };
   useEffect(() => {
     if (gameStage === "showResult") {
@@ -71,7 +70,36 @@ function HostView({
   };
 
   //共通部分
+  const [isNicknameSent, setIsNicknameSent] = useState(false);
   const [choseName, setChoseName] = useState(false);
+
+  const sendName = useCallback(() => {
+    if(nickname){
+      ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
+    }
+    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
+    console.log("送った" + nickname);
+    setIsNicknameSent(true);
+  }, [ws, nickname]);
+
+  useEffect(() => {
+    if (isHost) {
+      ws.send(
+        JSON.stringify({
+          type: "log",
+          remainingTime: remainingTime,
+          isNicknameSent: isNicknameSent,
+          bonusTimeUsed: bonusTimeUsed,
+        })
+      );
+    }
+    if (remainingTime <= 0 && !isNicknameSent && bonusTimeUsed) {
+      ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
+      ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
+      setIsNicknameSent(true);
+    }
+  }, [remainingTime, isNicknameSent]);
+
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
     setChoseName(true);
@@ -152,16 +180,29 @@ function HostView({
         </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
-        <>
-          <SendAdana
-            remainingTime={remainingTime}
-            bonusTimeUsed={bonusTimeUsed}
-            keyword={keyword}
-            ws={ws}
-            gameStage={gameStage}
-            isHost={isHost}
-          />
-        </>
+        <div class="children_space">
+        {bonusTimeUsed && <div>ボーナスタイム中！</div>}
+        <div>残り時間:{remainingTime}</div>
+        <div>あだ名を考えよう</div>
+        <div>キーワード: {keyword}</div>
+        {!isNicknameSent ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendName();
+            }}
+          >
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+            <button type="submit">あだ名送信</button>
+          </form>
+        ) : (
+          <p>送信済み</p>
+        )}
+      </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
