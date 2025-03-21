@@ -9,20 +9,23 @@
 } */
 
 body {
-  background: linear-gradient(45deg, #FF99CC, #CC99FF, #99CCFF);
+  background: linear-gradient(45deg, #ff99cc, #cc99ff, #99ccff);
   background-size: 400% 400%; /* 動きを付けるため */
   animation: gradientAnimation 8s ease infinite;
 }
 
 /* キラキラ動く感じ */
 @keyframes gradientAnimation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
-
-
-
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -30,7 +33,7 @@ code {
 }
 
 .children {
-  width: 55%;
+  width: 60%;
   border: solid;
   border-color: #ee82ee;
   background-color: white;
