@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import Start from "./start.js"
 
 function UserView({
   contentStarted,
@@ -10,7 +11,8 @@ function UserView({
   nicknames,
   votes,
   questions,
-  keyword
+  keyword,
+  onlineCount
 }) {
   //ユーザーのみの操作
   const [question, setQuestion] = useState("");
@@ -56,7 +58,11 @@ function UserView({
     <div>
       <h2>ユーザー画面</h2>
       {!contentStarted && (
-        <div>{hostName}さんがスタートを押すのを待ってるよ</div>
+        <Start
+        hostName={hostName}
+        onlineCount={onlineCount}
+        />
+        
       )}
       {contentStarted && gameStage === "waitingImage" && (
         <div>
