@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
 import Modal from "../component/modal";
@@ -24,6 +24,7 @@ function HostView({
     setAnswer("");
     setNickname("");
     setIsNicknameSent(false);
+    setAudioPlayed(false);
   };
   useEffect(() => {
     if (gameStage === "showResult") {
@@ -74,7 +75,7 @@ function HostView({
   const [choseName, setChoseName] = useState(false);
 
   const sendName = useCallback(() => {
-    if(nickname){
+    if (nickname) {
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
     }
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
@@ -98,6 +99,15 @@ function HostView({
       setIsNicknameSent(true);
     }
   }, [remainingTime, isNicknameSent]);
+
+  const [audioPlayed, setAudioPlayed] = useState(false);
+  useEffect(() => {
+    if (bonusTimeUsed && !audioPlayed) {
+      const audio = new Audio("/bonusTimeStart.wav");
+      audio.play();
+      setAudioPlayed(true);
+    }
+  });
 
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
@@ -180,28 +190,28 @@ function HostView({
       )}
       {contentStarted && gameStage === "thinkingName" && (
         <div class="children_space">
-        {bonusTimeUsed && <div>ボーナスタイム中！</div>}
-        <div>残り時間:{remainingTime}</div>
-        <div>あだ名を考えよう</div>
-        <div>キーワード: {keyword}</div>
-        {!isNicknameSent ? (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              sendName();
-            }}
-          >
-            <input
-              type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
-            <button type="submit">あだ名送信</button>
-          </form>
-        ) : (
-          <p>送信済み</p>
-        )}
-      </div>
+          {bonusTimeUsed && <div>ボーナスタイム中！</div>}
+          <div>残り時間:{remainingTime}</div>
+          <div>あだ名を考えよう</div>
+          <div>キーワード: {keyword}</div>
+          {!isNicknameSent ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendName();
+              }}
+            >
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+              />
+              <button type="submit">あだ名送信</button>
+            </form>
+          ) : (
+            <p>送信済み</p>
+          )}
+        </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
