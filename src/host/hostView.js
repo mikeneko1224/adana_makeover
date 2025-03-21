@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
 import Modal from "../component/modal";
@@ -74,7 +74,7 @@ function HostView({
   const [choseName, setChoseName] = useState(false);
 
   const sendName = useCallback(() => {
-    if(nickname){
+    if (nickname) {
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
     }
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
@@ -127,10 +127,30 @@ function HostView({
           />
         </>
       )}
+
       {contentStarted && gameStage === "waitingImage" && (
         <div className="children_space">
-          <label htmlFor="file-upload" class="file-upload-label">
-            <div className="file-upload-button">送る写真を選んでね！</div>
+          <label htmlFor="file-upload" className="file-upload-label">
+            {!selectedFile ? (
+              <div className="file-upload-button">
+                <img
+                  src="/カメラねこさん.png"
+                  alt="アイコン"
+                  className="upload-icon"
+                />
+                <p class="text">送る写真を選んでね！</p>
+                <p class="new_text">クリックして写真を選んでね♪</p>
+              </div>
+            ) : (
+              <div className="file-upload-button">
+                <p>選択したファイル：{selectedFile.name}</p>
+                <img
+                  src={URL.createObjectURL(selectedFile)}
+                  alt="選択した画像"
+                  className="preview-image"
+                />
+              </div>
+            )}
           </label>
           <input
             id="file-upload"
@@ -139,22 +159,12 @@ function HostView({
             onChange={handleImageUpload}
             className="file-upload-input"
           />
-          {!selectedFile && <p>ファイルを選んでください。</p>}
-          {selectedFile && (
-            <div className="image-preview">
-              <p>選択したファイル：{selectedFile.name}</p>
-              <img
-                src={URL.createObjectURL(selectedFile)}
-                alt="選択した画像"
-                className="preview-image"
-              />
-            </div>
-          )}
           <button onClick={sendImage} className="send-button">
             プロフ画像を送信
           </button>
         </div>
       )}
+
       {contentStarted && gameStage === "waitingQuestion" && (
         <div class="children_space">
           <div class="text">質問を待ってるよ</div>
@@ -180,28 +190,28 @@ function HostView({
       )}
       {contentStarted && gameStage === "thinkingName" && (
         <div class="children_space">
-        {bonusTimeUsed && <div>ボーナスタイム中！</div>}
-        <div>残り時間:{remainingTime}</div>
-        <div>あだ名を考えよう</div>
-        <div>キーワード: {keyword}</div>
-        {!isNicknameSent ? (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              sendName();
-            }}
-          >
-            <input
-              type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
-            <button type="submit">あだ名送信</button>
-          </form>
-        ) : (
-          <p>送信済み</p>
-        )}
-      </div>
+          {bonusTimeUsed && <div>ボーナスタイム中！</div>}
+          <div>残り時間:{remainingTime}</div>
+          <div>あだ名を考えよう</div>
+          <div>キーワード: {keyword}</div>
+          {!isNicknameSent ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendName();
+              }}
+            >
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+              />
+              <button type="submit">あだ名送信</button>
+            </form>
+          ) : (
+            <p>送信済み</p>
+          )}
+        </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
@@ -239,7 +249,7 @@ function HostView({
       )}
       {contentStarted && gameStage === "gameOver" && (
         <div class="children_space">
-          <div>終了</div>
+          <div class="text">終了</div>
         </div>
       )}
     </div>
