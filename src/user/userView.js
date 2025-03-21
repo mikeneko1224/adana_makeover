@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Modal from "../component/modal";
 
-
 function UserView({
   contentStarted,
   hostName,
@@ -21,6 +20,7 @@ function UserView({
     setChoseName(false);
     setNickname("");
     setIsNicknameSent(false);
+    setAudioPlayed(false);
   };
   useEffect(() => {
     if (gameStage === "showResult") {
@@ -50,7 +50,7 @@ function UserView({
   const [choseName, setChoseName] = useState(false);
 
   const sendName = useCallback(() => {
-    if(nickname){
+    if (nickname) {
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
     }
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
@@ -63,6 +63,15 @@ function UserView({
       setIsNicknameSent(true);
     }
   }, [remainingTime, isNicknameSent, ws, nickname]);
+
+  const [audioPlayed, setAudioPlayed] = useState(false);
+  useEffect(() => {
+    if (bonusTimeUsed && !audioPlayed) {
+      const audio = new Audio("/bonusTimeStart.wav");
+      audio.play();
+      setAudioPlayed(true);
+    }
+  });
 
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
