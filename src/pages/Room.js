@@ -3,6 +3,7 @@ import { useParams, useLocation } from "react-router-dom";
 import HostView from "../host/hostView";
 import UserView from "../user/userView";
 import { Header } from "component/header";
+import GameProgress from "../component/gameProgress";
 
 function Room() {
   const { roomId } = useParams();
@@ -96,6 +97,7 @@ function Room() {
   return (
     <div className="Room">
       <Header />
+      <GameProgress gameStage={gameStage} />
       {isHost ? (
         <HostView
           contentStarted={contentStarted}
@@ -130,6 +132,7 @@ function Room() {
           bonusTimeUsed={bonusTimeUsed}
         />
       )}
+      
     </div>
   );
 }
