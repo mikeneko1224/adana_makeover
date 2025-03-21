@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import Modal from "../component/modal";
 
 
 function UserView({
@@ -53,7 +54,6 @@ function UserView({
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
     }
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
-    console.log("送った" + nickname);
     setIsNicknameSent(true);
   }, [ws, nickname]);
   useEffect(() => {
@@ -68,7 +68,7 @@ function UserView({
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
     setChoseName(true);
   };
-  const goodName = () => {
+  const goodName = (nickname) => {
     ws.send(
       JSON.stringify({
         type: "gameStage",
@@ -180,8 +180,8 @@ function UserView({
               <div class="children_space">
                 <div>あだ名を選ぼう</div>
                 <ul>
-                  {[...new Set(nicknames)].map((nickname, index) => (
-                    <li key={index}>
+                  {nicknames.map((nickname, index) => (
+                    <li key={nickname}>
                       <button onClick={() => goodName(nickname)}>
                         {nickname}
                       </button>
@@ -189,7 +189,7 @@ function UserView({
                   ))}
                 </ul>
                 <button onClick={badName}>もう一度</button>
-                <button>ひらめいた</button>
+                <Modal ws={ws} />
               </div>
             </div>
           ) : (

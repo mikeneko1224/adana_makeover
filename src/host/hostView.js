@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback} from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
+import Modal from "../component/modal";
 
 function HostView({
   contentStarted,
@@ -52,7 +53,6 @@ function HostView({
           ws.send(
             JSON.stringify({ type: "gameStage", gameStage: "sendImage" })
           );
-          console.log("Sent image to server");
         }
       };
       reader.readAsDataURL(selectedFile);
@@ -78,7 +78,6 @@ function HostView({
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
     }
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
-    console.log("送った" + nickname);
     setIsNicknameSent(true);
   }, [ws, nickname]);
 
@@ -104,7 +103,7 @@ function HostView({
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
     setChoseName(true);
   };
-  const goodName = () => {
+  const goodName = (nickname) => {
     ws.send(
       JSON.stringify({
         type: "gameStage",
@@ -210,8 +209,8 @@ function HostView({
             <div class="children_space">
               <div>あだ名を選ぼう</div>
               <ul>
-                {[...new Set(nicknames)].map((nickname, index) => (
-                  <li key={index}>
+                {nicknames.map((nickname, index) => (
+                  <li key={nickname}>
                     <button onClick={() => goodName(nickname)}>
                       {nickname}
                     </button>
@@ -219,7 +218,7 @@ function HostView({
                 ))}
               </ul>
               <button onClick={badName}>もう一度</button>
-              <button>ひらめいた</button>
+              <Modal ws={ws} />
             </div>
           ) : (
             <p>選択済みです</p>
