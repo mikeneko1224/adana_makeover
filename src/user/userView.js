@@ -127,7 +127,9 @@ function UserView({
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
-                <button class="send_question" onClick={sendQuestion}>質問送信</button>
+                <button class="send_question" onClick={sendQuestion}>
+                  質問送信
+                </button>
               </div>
             </div>
           ) : (
@@ -215,7 +217,7 @@ function UserView({
       {contentStarted && gameStage === "showResult" && (
         <div class="children">
           <div class="children_space">
-            <div class="text">けっかはこんな感じ</div>
+            <div>けっかはこんな感じ</div>
             <ul>
               {Object.keys(votes).map((nickname, index) => (
                 <li key={index}>
