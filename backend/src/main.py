@@ -18,6 +18,7 @@ badCount: Dict[str, int] = {}
 contentStarted: Dict[str, bool] = {}
 remainingTime: Dict[str, int] = {}
 bonusTimeUsed: Dict[str, bool] = {}
+isCounting: Dict[str, bool] = {}
 
 # ルームの初期化
 def initialize_room(room_id: str):
@@ -85,12 +86,14 @@ async def handle_game_stage(data: dict, room_id: str):
             questionsCount[room_id] = 0
     elif data["gameStage"] == "sendAnswer":
         answer[room_id] = data["answer"]
+        isCounting[room_id] = False
         await broadcast_message(room_id, {"type": "keyword", "keyword": answer[room_id]})
         await broadcast_message(room_id, {"type": "gameStage", "gameStage": "thinkingName"})
         asyncio.create_task(countDown(room_id))
     elif data["gameStage"] == "sendName":
         nameCounts[room_id] += 1
         if nameCounts[room_id] == len(rooms[room_id]):
+            isCounting[room_id] = False
             votes[room_id] = {nickname: 0 for nickname in nicknames[room_id]}
             await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "choosingName"})
@@ -102,7 +105,7 @@ def resetTimeReaming(room_id: str):
     remainingTime[room_id] = 40
     bonusTimeUsed[room_id] = False
 
-isCounting = {}
+
 async def countDown(room_id: str):
     if isCounting.get(room_id, False):
         return

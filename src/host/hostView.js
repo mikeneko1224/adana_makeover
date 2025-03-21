@@ -202,9 +202,9 @@ function HostView({
         </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
-        <div class="children_space">
-          {bonusTimeUsed && <div>ボーナスタイム中！</div>}
-          <div>残り時間:{remainingTime}</div>
+        <div class="children_space remainingTimeContainer">
+          {bonusTimeUsed && <div className="bonus">ボーナスタイム中！</div>}
+          <div className="remainingTime">{remainingTime}</div>
           <div>あだ名を考えよう</div>
           <div>キーワード: {keyword}</div>
           {!isNicknameSent ? (
