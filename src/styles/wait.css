@@ -3,25 +3,75 @@
 }
 
 /* ファイル選択ボタンは非表示 */
- .file-upload-input {
+.file-upload-input {
   display: none;
-} 
+}
 
 .file-upload-label {
   display: inline-block;
+  width: 90%;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  border: 2px solid #4caf50; /* 枠線の追加 */
+  border: 2px solid #ffc6ff; /* 枠線の追加 */
   transition: background-color 0.3s, border-color 0.3s; /* ホバー時のアニメーション */
 }
 
+.file-upload-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .file-upload-label:hover {
-  background-color: #45a049;
-  border-color: #45a049; /* ホバー時に枠線の色を変える */
+  background-color: #ffe5ff;
+  border-color: #ffc6ff; /* ホバー時に枠線の色を変える */
 }
 
 .preview-image {
   width: 100%;
+}
+
+.send-button {
+  margin: 20px 0;
+  padding: 10px 0;
+  width: 100%;
+  border-radius: 10px;
+  border-color: #ffc6ff;
+  background: linear-gradient(to right, #fabcfa, #d5b6f3);
+
+  color: white;
+  font-size: 18px;
+}
+
+.upload-icon {
+  width: 100px; /* アイコンの幅 */
+  height: 100px; /* アイコンの高さ */
+  border-radius: 50%; /* 円形にするための設定 */
+  border: 3px solid #ffc6ff; /* 円枠の色と太さ */
+  object-fit: cover; /* 画像が枠に合わせて切り取られないように */
+  background-color: white;
+  margin: 5px 0px;
+}
+
+.new_text {
+  color: #dd49dd;
+  padding: 0px;
+}
+
+.answer_form {
+  width: 70%;
+  padding: 10px;
+}
+
+.answer_button {
+  width: 20%; /* ボタンの横幅を20%に設定 */
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: #ffb2ff; /* 任意でボタンの背景色 */
+  color: white; /* ボタンの文字色 */
+  font-weight: bold;
 }

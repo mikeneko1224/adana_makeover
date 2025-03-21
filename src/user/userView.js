@@ -93,7 +93,9 @@ function UserView({
       {!contentStarted && (
         <div class="children">
           <div class="children_space">
-            <div>{hostName}さんがスタートを押すのを待ってるよ</div>
+            <div class="text">
+              {hostName}さんがスタートを押すのを待ってるよ！
+            </div>
           </div>
         </div>
       )}
@@ -101,7 +103,7 @@ function UserView({
       {contentStarted && gameStage === "waitingImage" && (
         <div class="children">
           <div class="children_space">
-            <div>{hostName}さんのプロフ画像を待ってるよ</div>
+            <div class="text">{hostName}さんのプロフ画像を待ってるよ！</div>
             {imageData && <img src={imageData} alt="プロフ画像" />}
           </div>
         </div>
@@ -119,7 +121,7 @@ function UserView({
                     alt="プロフ画像"
                   />
                 )}
-                <div>{hostName}さんに質問しよう</div>
+                <div class="text">{hostName}さんに質問しよう！！</div>
                 <input
                   type="text"
                   value={question}
@@ -144,13 +146,13 @@ function UserView({
                   alt="プロフ画像"
                 />
               )}
-              <div>送った質問</div>
-              <div>
+              <div class="text">送った質問</div>
+              <div class="text">
                 {questions.map((index) => {
                   return <div key={index}>{index}</div>;
                 })}
               </div>
-              <div>{hostName}さんの回答を待っているよ</div>
+              <div class="text">{hostName}さんの回答を待っているよ！</div>
             </div>
           </div>
         </div>
@@ -213,7 +215,7 @@ function UserView({
       {contentStarted && gameStage === "showResult" && (
         <div class="children">
           <div class="children_space">
-            <div>けっかはこんな感じ</div>
+            <div class="text">けっかはこんな感じ</div>
             <ul>
               {Object.keys(votes).map((nickname, index) => (
                 <li key={index}>
@@ -227,7 +229,7 @@ function UserView({
       {contentStarted && gameStage === "gameOver" && (
         <div class="children">
           <div class="children_space">
-            <div>ゲーム終了</div>
+            <div class="text">ゲーム終了</div>
           </div>
         </div>
       )}
