@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import SendAdana from "../component/sendAdana";
+import React, { useState, useEffect, useCallback } from "react";
+
 
 function UserView({
   contentStarted,
@@ -19,6 +19,7 @@ function UserView({
     setIsQuestionSent(false);
     setChoseName(false);
     setNickname("");
+    setIsNicknameSent(false);
   };
   useEffect(() => {
     if (gameStage === "showResult") {
@@ -44,7 +45,24 @@ function UserView({
 
   //共通部分
   const [nickname, setNickname] = useState("");
+  const [isNicknameSent, setIsNicknameSent] = useState(false);
   const [choseName, setChoseName] = useState(false);
+
+  const sendName = useCallback(() => {
+    if(nickname){
+      ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
+    }
+    ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
+    console.log("送った" + nickname);
+    setIsNicknameSent(true);
+  }, [ws, nickname]);
+  useEffect(() => {
+    if (remainingTime <= 0 && !isNicknameSent && bonusTimeUsed) {
+      ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
+      ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
+      setIsNicknameSent(true);
+    }
+  }, [remainingTime, isNicknameSent, ws, nickname]);
 
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
@@ -130,13 +148,29 @@ function UserView({
       )}
       {contentStarted && gameStage === "thinkingName" && (
         <div class="children">
-          <SendAdana
-            remainingTime={remainingTime}
-            bonusTimeUsed={bonusTimeUsed}
-            keyword={keyword}
-            ws={ws}
-            gameStage={gameStage}
-          />
+          <div class="children_space">
+            {bonusTimeUsed && <div>ボーナスタイム中！</div>}
+            <div>残り時間:{remainingTime}</div>
+            <div>あだ名を考えよう</div>
+            <div>キーワード: {keyword}</div>
+            {!isNicknameSent ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendName();
+                }}
+              >
+                <input
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                />
+                <button type="submit">あだ名送信</button>
+              </form>
+            ) : (
+              <p>送信済み</p>
+            )}
+          </div>
         </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
