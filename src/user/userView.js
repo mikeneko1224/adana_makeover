@@ -129,13 +129,15 @@ function UserView({
         </div>
       )}
       {contentStarted && gameStage === "thinkingName" && (
-        <SendAdana
-          remainingTime={remainingTime}
-          bonusTimeUsed={bonusTimeUsed}
-          keyword={keyword}
-          ws={ws}
-          gameStage={gameStage}
-        />
+        <div class="children">
+          <SendAdana
+            remainingTime={remainingTime}
+            bonusTimeUsed={bonusTimeUsed}
+            keyword={keyword}
+            ws={ws}
+            gameStage={gameStage}
+          />
+        </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
