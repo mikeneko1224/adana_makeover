@@ -74,7 +74,7 @@ code {
 
 .progress-bar {
   height: 20px;
-  background-color: #4caf50;
+  background-color: #8ac9ee;
   width: 0%;
   transition: width 0.3s ease;
 }
@@ -92,6 +92,27 @@ code {
 .fade-exit-active {
   opacity: 0;
   transition: opacity 300ms;
+}
+
+.remainingTimeContainer {
+  position: relative;
+}
+
+.remainingTime{
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 350%;
+  color: #f512a9;
+}
+
+.bonus{
+  color: #e78020;
+  text-shadow: 
+    -1px -1px 0 rgb(235, 137, 222),
+    1px -1px 0 rgb(235, 84, 84),
+    -1px 1px 0 rgb(143, 255, 69),
+    1px 1px 0 rgb(255, 23, 224); 
 }
 
 /* スマートフォン用のスタイル */
