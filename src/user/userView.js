@@ -127,7 +127,9 @@ function UserView({
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
-                <button class="send_question" onClick={sendQuestion}>質問送信</button>
+                <button class="send_question" onClick={sendQuestion}>
+                  質問送信
+                </button>
               </div>
             </div>
           ) : (
@@ -146,10 +148,9 @@ function UserView({
                   alt="プロフ画像"
                 />
               )}
-              <div class="text">送った質問</div>
               <div class="text">
                 {questions.map((index) => {
-                  return <div key={index}>{index}</div>;
+                  return <div key={index}>送った質問 : {index}</div>;
                 })}
               </div>
               <div class="text">{hostName}さんの回答を待っているよ！</div>
@@ -162,25 +163,32 @@ function UserView({
           <div class="children_space remainingTimeContainer">
             {bonusTimeUsed && <div className="bonus">ボーナスタイム中！</div>}
             <div className="remainingTime">{remainingTime}</div>
-            <div>あだ名を考えよう</div>
-            <div>キーワード: {keyword}</div>
-            {!isNicknameSent ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendName();
-                }}
-              >
-                <input
-                  type="text"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
-                />
-                <button type="submit">あだ名送信</button>
-              </form>
-            ) : (
-              <p>送信済み</p>
-            )}
+            <div class="name_space">
+              <div style={{ marginBottom: "20px", fontSize: "20px" }}>
+                あだ名を考えよう
+              </div>
+              <div>キーワード: {keyword}</div>
+              {!isNicknameSent ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    sendName();
+                  }}
+                >
+                  <input
+                    class="input_name"
+                    type="text"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                  />
+                  <button class="send_adana" type="submit">
+                    あだ名送信
+                  </button>
+                </form>
+              ) : (
+                <p>送信済み</p>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -189,24 +197,36 @@ function UserView({
           {!choseName ? (
             <div class="children">
               <div class="children_space">
-                <div>あだ名を選ぼう</div>
+                <div>あだ名を選ぼう!</div>
                 <ul>
                   {nicknames.map((nickname, index) => (
                     <li key={nickname}>
-                      <button onClick={() => goodName(nickname)}>
+                      <button
+                        class="select_button"
+                        onClick={() => goodName(nickname)}
+                      >
                         {nickname}
                       </button>
                     </li>
                   ))}
                 </ul>
-                <button onClick={badName}>もう一度</button>
-                <Modal ws={ws} />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <button class="retry_button" onClick={badName}>
+                    もう一度！
+                  </button>
+                  <Modal ws={ws} />
+                </div>
               </div>
             </div>
           ) : (
             <div class="children">
               <div class="children_space">
-                <p>選択済みです</p>
+                <p class="text">選択完了！</p>
               </div>
             </div>
           )}
@@ -215,7 +235,7 @@ function UserView({
       {contentStarted && gameStage === "showResult" && (
         <div class="children">
           <div class="children_space">
-            <div class="text">けっかはこんな感じ</div>
+            <div>けっかはこんな感じ</div>
             <ul>
               {Object.keys(votes).map((nickname, index) => (
                 <li key={index}>

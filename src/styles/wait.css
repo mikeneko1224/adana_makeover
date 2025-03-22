@@ -41,9 +41,15 @@
   border-radius: 10px;
   border-color: #ffc6ff;
   background: linear-gradient(to right, #fabcfa, #d5b6f3);
+  box-shadow: 0 5px 0 #f597f5;
 
   color: white;
   font-size: 18px;
+}
+
+.send-button:hover {
+  box-shadow: none;
+  transform: translateY(5px);
 }
 
 .upload-icon {
@@ -74,4 +80,8 @@
   background-color: #ffb2ff; /* 任意でボタンの背景色 */
   color: white; /* ボタンの文字色 */
   font-weight: bold;
+}
+
+.answer_button:hover {
+  background-color: #ff8eff;
 }
