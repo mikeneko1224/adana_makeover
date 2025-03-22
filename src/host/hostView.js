@@ -148,7 +148,7 @@ function HostView({
                   alt="アイコン"
                   className="upload-icon"
                 />
-                <p class="text">送る写真を選んでね！</p>
+                <p class="text">送る写真を選ぼう！</p>
                 <p class="new_text">クリックして写真を選んでね♪</p>
               </div>
             ) : (
