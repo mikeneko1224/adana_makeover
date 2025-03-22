@@ -28,7 +28,7 @@ function Room() {
 
     if (roomId) {
       //デプロイ時はこっち
-      // const websocket = new WebSocket(`wss://adana-makeover.onrender.com/ws/${roomId}`);
+      //const websocket = new WebSocket(`wss://adana-makeover.onrender.com/ws/${roomId}`);
       //ローカルで動かすときはこっち
       const websocket = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
 

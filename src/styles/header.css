@@ -1,10 +1,26 @@
 .Header {
   text-align: center;
   font-size: 40px;
-  color: #ffb3ff;
+  color: #00CFB4;
   font-weight: bold;
   padding: 40px 0px;
+  font-size: 50px;   /* 文字サイズを50pxに指定 */
+  animation: flash 1s infinite; /* アニメーションflashを1秒ごとに繰り返す */
+  
 }
+
+@keyframes flash {
+  0%, 100% {
+    /* 明るく光るよう影を重ねる */
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ffff9e, 0 0 70px #ffff9e, 0 0 80px #ffff9e, 0 0 100px #ffff9e, 0 0 150px #ffff9e;
+  }
+  50% {
+    /* 淡く光るよう影を重ねる */
+    text-shadow: 0 0 10px #fff, 0 0 20px #fcfcfc, 0 0 30px #fcfcfc, 0 0 40px #ffff33;
+  }
+}
+
+
 
 @media screen and (max-width: 600px) {
   .Header {
