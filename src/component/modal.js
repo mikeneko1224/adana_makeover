@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export default function Modal({ws}) {
+export default function Modal({ ws }) {
   const showAlert = () => {
     Swal.fire({
       title: "ひらめいた！",
@@ -27,8 +27,8 @@ export default function Modal({ws}) {
   };
 
   return (
-    <div>
-      <button onClick={showAlert}>ひらめいた！</button>
-    </div>
+    <button class="hirameki_button" onClick={showAlert}>
+      ひらめいた！
+    </button>
   );
 }

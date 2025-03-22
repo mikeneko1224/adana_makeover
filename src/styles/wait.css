@@ -81,3 +81,7 @@
   color: white; /* ボタンの文字色 */
   font-weight: bold;
 }
+
+.answer_button:hover {
+  background-color: #ff8eff;
+}

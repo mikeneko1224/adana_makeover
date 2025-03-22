@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import MakeRoom from "./make_room";
 import "styles/wait.css";
 import Modal from "../component/modal";
+import { buildQueries } from "@testing-library/dom";
 
 function HostView({
   contentStarted,
@@ -205,46 +206,65 @@ function HostView({
         <div class="children_space remainingTimeContainer">
           {bonusTimeUsed && <div className="bonus">ボーナスタイム中！</div>}
           <div className="remainingTime">{remainingTime}</div>
-          <div>あだ名を考えよう</div>
-          <div>キーワード: {keyword}</div>
-          {!isNicknameSent ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendName();
-              }}
-            >
-              <input
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-              />
-              <button type="submit">あだ名送信</button>
-            </form>
-          ) : (
-            <p>送信済み</p>
-          )}
+          <div class="name_space">
+            <div style={{ marginBottom: "20px", fontSize: "20px" }}>
+              あだ名を考えよう！
+            </div>
+            <div>キーワード: {keyword}</div>
+            {!isNicknameSent ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendName();
+                }}
+              >
+                <input
+                  class="input_name"
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                />
+                <button class="send_adana" type="submit">
+                  あだ名送信
+                </button>
+              </form>
+            ) : (
+              <p>送信済み</p>
+            )}
+          </div>
         </div>
       )}
       {contentStarted && gameStage === "choosingName" && (
         <>
           {!choseName ? (
             <div class="children_space">
-              <div>あだ名を選ぼう</div>
+              <div class="text2">あだ名を選ぼう!</div>
               <ul>
                 {nicknames.map((nickname, index) => (
                   <li key={nickname}>
-                    <button onClick={() => goodName(nickname)}>
+                    <button
+                      class="select_button"
+                      onClick={() => goodName(nickname)}
+                    >
                       {nickname}
                     </button>
                   </li>
                 ))}
               </ul>
-              <button onClick={badName}>もう一度</button>
-              <Modal ws={ws} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <button class="retry_button" onClick={badName}>
+                  もう一度！
+                </button>
+                <Modal ws={ws} />
+              </div>
             </div>
           ) : (
-            <p>選択済みです</p>
+            <p class="text">選択完了！</p>
           )}
         </>
       )}
