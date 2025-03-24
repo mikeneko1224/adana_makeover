@@ -198,6 +198,10 @@ async def health_check():
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(health_check())
+    
+@app.get("/")
+async def root():
+    return {"message": "Health check OK"}
 
 # WebSocketエンドポイント
 @app.websocket("/ws/{room_id}")
