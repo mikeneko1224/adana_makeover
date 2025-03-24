@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Modal from "../component/modal";
+import "styles/userView.css";
 
 function UserView({
   contentStarted,
@@ -127,6 +128,7 @@ function UserView({
                 <div class="text">{hostName}さんに質問しよう！！</div>
                 <input
                   type="text"
+                  placeholder="質問を入力してね" 
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
