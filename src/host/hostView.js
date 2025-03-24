@@ -27,8 +27,10 @@ function HostView({
     setIsNicknameSent(false);
     setAudioPlayed(false);
   };
+  const audio = new Audio("/bonusTimeStart.mp3");
+
   useEffect(() => {
-    if (gameStage === "showResult") {
+    if (gameStage === "waitingQuestion") {
       initialState();
     }
   }, [gameStage]);
@@ -94,7 +96,7 @@ function HostView({
         })
       );
     }
-    if (remainingTime <= 0 && !isNicknameSent && bonusTimeUsed) {
+    if (remainingTime <= 0 && !isNicknameSent && bonusTimeUsed && gameStage === "thinkingName") {
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
       ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
       setIsNicknameSent(true);
@@ -104,11 +106,10 @@ function HostView({
   const [audioPlayed, setAudioPlayed] = useState(false);
   useEffect(() => {
     if (bonusTimeUsed && !audioPlayed) {
-      const audio = new Audio("/bonusTimeStart.wav");
       audio.play();
       setAudioPlayed(true);
     }
-  });
+  },[bonusTimeUsed, audioPlayed]);
 
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
