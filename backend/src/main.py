@@ -44,6 +44,8 @@ def initialize_room(room_id: str):
         remainingTime[room_id] = 40
     if room_id not in bonusTimeUsed:
         bonusTimeUsed[room_id] = False
+    if room_id not in isCounting:
+        isCounting[room_id] = False
 
 # メッセージの処理
 async def handle_message(data: dict, websocket: WebSocket, room_id: str):
@@ -92,11 +94,7 @@ async def handle_game_stage(data: dict, room_id: str):
         asyncio.create_task(countDown(room_id))
     elif data["gameStage"] == "sendName":
         nameCounts[room_id] += 1
-        if nameCounts[room_id] == len(rooms[room_id]):
-            isCounting[room_id] = False
-            votes[room_id] = {nickname: 0 for nickname in nicknames[room_id]}
-            await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
-            await broadcast_message(room_id, {"type": "gameStage", "gameStage": "choosingName"})
+        votes[room_id] = {nickname: 0 for nickname in nicknames[room_id]}
     elif data["gameStage"] in ["choseName", "badName"]:
         await handle_vote(data, room_id)
 
@@ -104,14 +102,15 @@ async def handle_game_stage(data: dict, room_id: str):
 def resetTimeReaming(room_id: str):
     remainingTime[room_id] = 40
     bonusTimeUsed[room_id] = False
-
+    nameCounts[room_id] = 0
 
 async def countDown(room_id: str):
     if isCounting.get(room_id, False):
+        resetTimeReaming(room_id)
         return
     
-    isCounting[room_id] = True
     resetTimeReaming(room_id)
+    await broadcast_message(room_id, {"type": "remainingTime", "remainingTime": remainingTime[room_id]})
     await broadcast_message(room_id, {"type": "bonusTimeUsed", "bonusTimeUsed": bonusTimeUsed[room_id]})
 
     while remainingTime[room_id] >= 0:
@@ -120,7 +119,7 @@ async def countDown(room_id: str):
         
         await broadcast_message(room_id, {"type": "remainingTime", "remainingTime": remainingTime[room_id]})
 
-        if nameCounts[room_id] == len(rooms[room_id]):  # すべてのユーザーが名前を送信したら終了
+        if nameCounts[room_id] == len(rooms[room_id]):
             break
 
         if remainingTime[room_id] <= 0 and not bonusTimeUsed[room_id]:
@@ -130,9 +129,13 @@ async def countDown(room_id: str):
             await broadcast_message(room_id, {"type": "bonusTimeUsed", "bonusTimeUsed": bonusTimeUsed[room_id]})
         elif remainingTime[room_id] <= 0 and bonusTimeUsed[room_id]:
             break
-
-    resetTimeReaming(room_id)
+    
     isCounting[room_id] = False
+    await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
+    await broadcast_message(room_id, {"type": "gameStage", "gameStage": "choosingName"})
+    resetTimeReaming(room_id)
+    await broadcast_message(room_id, {"type": "remainingTime", "remainingTime": remainingTime[room_id]})
+    await broadcast_message(room_id, {"type": "bonusTimeUsed", "bonusTimeUsed": bonusTimeUsed[room_id]})
 
 # 投票フェーズ用処理
 async def handle_vote(data: dict, room_id: str):
@@ -144,21 +147,21 @@ async def handle_vote(data: dict, room_id: str):
         if sum(votes[room_id].values()) <= badCount[room_id]:
             await broadcast_message(room_id, {"type": "result", "result": votes[room_id], "badCount": badCount[room_id]})
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(15)
+            await asyncio.sleep(8)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
             badCount[room_id] = 0
             votes[room_id] = {}
         else:
             await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(15)
+            await asyncio.sleep(8)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "gameOver"})
 
 # みんなが考えたあだ名をnicknamesに
 async def handle_nickname(data: dict, room_id: str):
     if "nickname" in data and data["nickname"].strip():
-        nicknames[room_id].append(data["nickname"].strip())  # 前後の空白を削除して追加
-        nicknames[room_id] = list(set(nicknames[room_id]))  # 重複を排除
+        nicknames[room_id].append(data["nickname"].strip())
+        nicknames[room_id] = list(set(nicknames[room_id]))
         await broadcast_message(room_id, {"type": "nicknames", "nicknames": nicknames[room_id]})
         print(f"Nicknames in room {room_id}: {nicknames[room_id]}")
 
