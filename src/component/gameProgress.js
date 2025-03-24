@@ -25,7 +25,7 @@ export default function GameProgress({ gameStage }) {
           }}
         ></div>
         <img
-          src="/お手紙ねこさん.PNG"
+          src="/お手紙ねこさん.png"
           className="icon"
           style={{
             position: "absolute",
