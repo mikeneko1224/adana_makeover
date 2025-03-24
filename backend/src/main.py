@@ -2,6 +2,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from typing import Dict, List
 import json
 import asyncio
+import aiohttp
 
 app = FastAPI()
 
@@ -180,6 +181,23 @@ async def handle_nickname(data: dict, room_id: str):
 async def broadcast_message(room_id: str, message: dict):
     for ws in rooms[room_id]:
         await ws.send_text(json.dumps(message))
+
+# Sleep対策用 #
+async def health_check():
+    url = "https://adana-makeover.onrender.com"
+    while True:
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    print(f"13minutes Health check status: {response.status}")
+        except Exception as e:
+            print(f"Health check failed: {e}")
+        # 13分（780秒）間隔
+        await asyncio.sleep(780)
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(health_check())
 
 # WebSocketエンドポイント
 @app.websocket("/ws/{room_id}")
