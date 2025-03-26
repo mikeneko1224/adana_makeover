@@ -215,3 +215,8 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             del questionsCount[room_id]
             del answer[room_id]
             del contentStarted[room_id]
+
+#スリープ対策
+@app.get("/")
+async def root():
+    return {"message": "Health check OK"}
