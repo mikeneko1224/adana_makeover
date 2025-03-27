@@ -12,11 +12,13 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-top: 20px;
 }
 
 .URL_form {
   width: 80%;
   padding: 10px;
+  margin: 0;
 }
 
 .copy_button {
@@ -39,12 +41,19 @@
   margin-top: 10px;
   font-weight: bold;
   visibility: hidden;
+  text-align: center;
 }
 
 .number_block {
   display: flex;
   margin-top: 30px;
   align-items: baseline;
+  justify-content: right;
+  background-color: rgb(230, 230, 230);
+}
+
+.number_block.highlight {
+  background-color: rgb(203, 247, 203); /* 2人以上のときの色 (ライトグリーン) */
 }
 
 .number_people {
@@ -53,7 +62,7 @@
 }
 
 .start_button {
-  margin-top: 30px;
+  margin-top: 20px;
   width: 100%;
   padding: 10px 20px;
   border-radius: 15px;

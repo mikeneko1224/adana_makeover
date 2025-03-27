@@ -37,8 +37,10 @@ export default function MakeRoom({
           >
             {message}
           </p>
-          <div class="number_block">
-            <div>現在のオンライン：</div>
+          <div
+            className={`number_block ${onlineCount >= 2 ? "highlight" : ""}`}
+          >
+            <div>現在の人数：</div>
             <div class="number_people">{onlineCount}人</div>
           </div>
           <button onClick={startContent} class="start_button">

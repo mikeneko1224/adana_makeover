@@ -4,6 +4,7 @@ import HostView from "../host/hostView";
 import UserView from "../user/userView";
 import { Header } from "component/header";
 import GameProgress from "../component/gameProgress";
+import Howto from "component/howto";
 
 function Room() {
   const { roomId } = useParams();
@@ -28,9 +29,9 @@ function Room() {
 
     if (roomId) {
       //デプロイ時はこっち
-      const websocket = new WebSocket(`wss://adana-makeover.onrender.com/ws/${roomId}`);
+      // const websocket = new WebSocket(`wss://adana-makeover.onrender.com/ws/${roomId}`);
       //ローカルで動かすときはこっち
-      // const websocket = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
+      const websocket = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
 
       websocket.onopen = () => {
         websocket.send(JSON.stringify({ type: "join", name }));
@@ -87,10 +88,14 @@ function Room() {
   }, [roomId, isHost]);
 
   const startContent = () => {
-    setContentStarted(true);
+    if (onlineCount < 2) {
+      alert("このゲームは2人以上でスタートできるよ！リンクを送って友達を誘おう！");
+      return;
+    }
     if (ws) {
       ws.send(JSON.stringify({ type: "startContent" }));
       ws.send(JSON.stringify({ type: "gameStage", gameStage: "gameStart" }));
+      setContentStarted(true);
     }
   };
 
@@ -132,6 +137,7 @@ function Room() {
           bonusTimeUsed={bonusTimeUsed}
         />
       )}
+      <Howto />
     </div>
   );
 }

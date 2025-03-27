@@ -2,6 +2,7 @@ import "styles/App.css";
 import { Header } from "component/header";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import Howto from "component/howto";
 
 function App() {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ function App() {
           </button>
         </div>
       </div>
+      <Howto />
     </div>
   );
 }
