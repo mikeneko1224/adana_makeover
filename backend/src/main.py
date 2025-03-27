@@ -2,6 +2,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from typing import Dict, List
 import json
 import asyncio
+import aiohttp
 
 app = FastAPI()
 
@@ -86,6 +87,8 @@ async def handle_game_stage(data: dict, room_id: str):
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingAnswer"})
             nameCounts[room_id] = 0
             questionsCount[room_id] = 0
+            badCount[room_id] = 0
+            votes[room_id] = {}
     elif data["gameStage"] == "sendAnswer":
         answer[room_id] = data["answer"]
         isCounting[room_id] = False
@@ -143,18 +146,16 @@ async def handle_vote(data: dict, room_id: str):
         votes[room_id][data["choseName"]] = votes[room_id].get(data["choseName"], 0) + 1
     else:
         badCount[room_id] += 1
+
+    print(f"Votes in room {room_id}: {votes[room_id]}")
+
     if sum(votes[room_id].values()) + badCount[room_id] == len(rooms[room_id]):
-        if sum(votes[room_id].values()) <= badCount[room_id]:
-            await broadcast_message(room_id, {"type": "result", "result": votes[room_id], "badCount": badCount[room_id]})
-            await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(8)
+        await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
+        await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
+        await asyncio.sleep(8)
+        if sum(votes[room_id].values()) <= badCount[room_id]:          
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
-            badCount[room_id] = 0
-            votes[room_id] = {}
         else:
-            await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
-            await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(8)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "gameOver"})
 
 # みんなが考えたあだ名をnicknamesに
@@ -214,3 +215,8 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
             del questionsCount[room_id]
             del answer[room_id]
             del contentStarted[room_id]
+
+#スリープ対策
+@app.get("/")
+async def root():
+    return {"message": "Health check OK"}
