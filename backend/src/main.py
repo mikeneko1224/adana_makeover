@@ -146,16 +146,16 @@ async def handle_vote(data: dict, room_id: str):
         votes[room_id][data["choseName"]] = votes[room_id].get(data["choseName"], 0) + 1
     else:
         badCount[room_id] += 1
+
+    print(f"Votes in room {room_id}: {votes[room_id]}")
+
     if sum(votes[room_id].values()) + badCount[room_id] == len(rooms[room_id]):
-        if sum(votes[room_id].values()) <= badCount[room_id]:
-            await broadcast_message(room_id, {"type": "result", "votes": votes[room_id], "badCount": badCount[room_id]})
-            await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(8)
+        await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
+        await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
+        await asyncio.sleep(8)
+        if sum(votes[room_id].values()) <= badCount[room_id]:          
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
         else:
-            await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
-            await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-            await asyncio.sleep(8)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "gameOver"})
 
 # みんなが考えたあだ名をnicknamesに
