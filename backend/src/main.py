@@ -80,7 +80,9 @@ async def handle_game_stage(data: dict, room_id: str):
     elif data["gameStage"] == "sendImage":
         await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
     elif data["gameStage"] == "sendQuestion":
-        questions[room_id].append(data["question"])
+        if "question" in data and data["question"].strip():
+            questions[room_id].append(data["question"])
+
         questionsCount[room_id] += 1
         if questionsCount[room_id] == len(rooms[room_id]) - 1:
             await broadcast_message(room_id, {"type": "questions", "questions": questions[room_id]})
@@ -151,11 +153,14 @@ async def handle_vote(data: dict, room_id: str):
 
     if sum(votes[room_id].values()) + badCount[room_id] == len(rooms[room_id]):
         await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
-        await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
-        await asyncio.sleep(8)
-        if sum(votes[room_id].values()) <= badCount[room_id]:          
+        
+        if sum(votes[room_id].values()) <= badCount[room_id]:
+            await broadcast_message(room_id, {"type": "gameStage", "gameStage": "backToQuestion"})
+            await asyncio.sleep(8)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
         else:
+            await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
+            await asyncio.sleep(8)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "gameOver"})
 
 # みんなが考えたあだ名をnicknamesに

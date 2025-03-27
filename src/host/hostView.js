@@ -96,7 +96,12 @@ function HostView({
         })
       );
     }
-    if (remainingTime <= 0 && !isNicknameSent && bonusTimeUsed && gameStage === "thinkingName") {
+    if (
+      remainingTime <= 0 &&
+      !isNicknameSent &&
+      bonusTimeUsed &&
+      gameStage === "thinkingName"
+    ) {
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
       ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
       setIsNicknameSent(true);
@@ -109,7 +114,7 @@ function HostView({
       audio.play();
       setAudioPlayed(true);
     }
-  },[bonusTimeUsed, audioPlayed]);
+  }, [bonusTimeUsed, audioPlayed]);
 
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
@@ -179,15 +184,19 @@ function HostView({
 
       {contentStarted && gameStage === "waitingQuestion" && (
         <div class="children_space">
-          <div class="text">質問を待ってるよ！</div>
+          <div class="text">みんなからの質問を待ってるよ！</div>
         </div>
       )}
       {contentStarted && gameStage === "waitingAnswer" && (
         <div class="children_space">
-          <div class="text">質問に答えよう！</div>
-          <div>
-            {questions.map((index) => {
-              return <div key={index}>{index}</div>;
+          <div class="text">好きな質問に答えよう！</div>
+          <div class="text questions">
+            {questions.map((question, index) => {
+              return (
+                <div key={index}>
+                  {index % 2 === 0 ? "◇" : "◆"} {question}
+                </div>
+              );
             })}
           </div>
           <input
@@ -211,7 +220,8 @@ function HostView({
             <div style={{ marginBottom: "20px", fontSize: "20px" }}>
               あだ名を考えよう！
             </div>
-            <div>キーワード: {keyword}</div>
+            <div className="text">キーワード</div>
+            <div className="text">{keyword}</div>
             {!isNicknameSent ? (
               <form
                 onSubmit={(e) => {
@@ -240,7 +250,7 @@ function HostView({
           {!choseName ? (
             <div class="children_space">
               <div class="text2">あだ名を選ぼう!</div>
-              <ul>
+              <ul class="select_space">
                 {nicknames.map((nickname, index) => (
                   <li key={nickname}>
                     <button
@@ -269,9 +279,21 @@ function HostView({
           )}
         </>
       )}
+      {contentStarted && gameStage === "backToQuestion" && (
+        <div class="children_space">
+          <div>まだ舞える！数秒後に質問に戻るよ～</div>
+          <ul>
+            {Object.keys(votes).map((nickname, index) => (
+              <li key={index}>
+                {nickname}: {votes[nickname]}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {contentStarted && gameStage === "showResult" && (
         <div class="children_space">
-          <div>けっかはこんな感じ</div>
+          <div>けっかが集まったよ☆</div>
           <ul>
             {Object.keys(votes).map((nickname, index) => (
               <li key={index}>
@@ -283,7 +305,19 @@ function HostView({
       )}
       {contentStarted && gameStage === "gameOver" && (
         <div class="children_space">
-          <div class="text">終了</div>
+          <div class="text">ゲーム終了</div>
+          {Object.keys(votes).length > 0 && (
+            <div class="text adana_result">
+              {Object.entries(votes)
+                .filter(
+                  ([nickname, count]) =>
+                    count === Math.max(...Object.values(votes))
+                )
+                .map(([nickname]) => nickname)
+                .join(", ")}
+            </div>
+          )}
+          <div class="text">あだ名気に入ったかな...?</div>
         </div>
       )}
     </div>

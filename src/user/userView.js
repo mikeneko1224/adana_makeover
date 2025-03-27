@@ -24,7 +24,7 @@ function UserView({
     setAudioPlayed(false);
   };
   const audio = new Audio("/bonusTimeStart.mp3");
-  
+
   useEffect(() => {
     if (gameStage === "waitingQuestion") {
       initialState();
@@ -61,7 +61,12 @@ function UserView({
   }, [ws, nickname]);
 
   useEffect(() => {
-    if (remainingTime <= 0 && !isNicknameSent && bonusTimeUsed && gameStage === "thinkingName") {
+    if (
+      remainingTime <= 0 &&
+      !isNicknameSent &&
+      bonusTimeUsed &&
+      gameStage === "thinkingName"
+    ) {
       ws.send(JSON.stringify({ type: "nickname", nickname: nickname }));
       ws.send(JSON.stringify({ type: "gameStage", gameStage: "sendName" }));
       setIsNicknameSent(true);
@@ -71,11 +76,10 @@ function UserView({
   const [audioPlayed, setAudioPlayed] = useState(false);
   useEffect(() => {
     if (bonusTimeUsed && !audioPlayed) {
-      const audio = new Audio("/bonusTimeStart.mp3");
       audio.play();
       setAudioPlayed(true);
     }
-  });
+  }, [bonusTimeUsed, audioPlayed]);
 
   const badName = () => {
     ws.send(JSON.stringify({ type: "gameStage", gameStage: "badName" }));
@@ -128,7 +132,7 @@ function UserView({
                 <div class="text">{hostName}さんに質問しよう！！</div>
                 <input
                   type="text"
-                  placeholder="質問を入力してね" 
+                  placeholder="質問を入力してね"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
@@ -154,9 +158,16 @@ function UserView({
                 />
               )}
               <div class="text">
-                {questions.map((index) => {
-                  return <div key={index}>送った質問 : {index}</div>;
-                })}
+                <div class="text questions">▼みんなが送った質問▼</div>
+                <div class="text questions">
+                  {questions.map((question, index) => {
+                    return (
+                      <div key={index}>
+                        {index % 2 === 0 ? "◇" : "◆"} {question}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               <div class="text">{hostName}さんの回答を待っているよ！</div>
             </div>
@@ -172,7 +183,8 @@ function UserView({
               <div style={{ marginBottom: "20px", fontSize: "20px" }}>
                 あだ名を考えよう
               </div>
-              <div>キーワード: {keyword}</div>
+              <div className="text">キーワード</div>
+              <div className="text">{keyword}</div>
               {!isNicknameSent ? (
                 <form
                   onSubmit={(e) => {
@@ -191,7 +203,7 @@ function UserView({
                   </button>
                 </form>
               ) : (
-                <p>送信済み</p>
+                <p className="text">送信済み</p>
               )}
             </div>
           </div>
@@ -203,7 +215,7 @@ function UserView({
             <div class="children">
               <div class="children_space">
                 <div>あだ名を選ぼう!</div>
-                <ul>
+                <ul class="select_space">
                   {nicknames.map((nickname, index) => (
                     <li key={nickname}>
                       <button
@@ -237,10 +249,24 @@ function UserView({
           )}
         </>
       )}
+      {contentStarted && gameStage === "backToQuestion" && (
+        <div class="children">
+          <div class="children_space">
+            <div className="text">まだ舞える！数秒後に質問に戻るよ～</div>
+            <ul>
+              {Object.keys(votes).map((nickname, index) => (
+                <li key={index}>
+                  {nickname}: {votes[nickname]}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
       {contentStarted && gameStage === "showResult" && (
         <div class="children">
           <div class="children_space">
-            <div>けっかはこんな感じ</div>
+            <div>けっかが集まったよ☆</div>
             <ul>
               {Object.keys(votes).map((nickname, index) => (
                 <li key={index}>
@@ -252,10 +278,20 @@ function UserView({
         </div>
       )}
       {contentStarted && gameStage === "gameOver" && (
-        <div class="children">
-          <div class="children_space">
-            <div class="text">ゲーム終了</div>
-          </div>
+        <div class="children_space">
+          <div class="text">ゲーム終了</div>
+          {Object.keys(votes).length > 0 && (
+            <div class="text adana_result">
+              {Object.entries(votes)
+                .filter(
+                  ([nickname, count]) =>
+                    count === Math.max(...Object.values(votes))
+                )
+                .map(([nickname]) => nickname)
+                .join(", ")}
+            </div>
+          )}
+          <div class="text">さっそく呼んでみて！</div>
         </div>
       )}
     </div>

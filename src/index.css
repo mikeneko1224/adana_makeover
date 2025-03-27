@@ -60,6 +60,11 @@ code {
   color: #9932cc;
 }
 
+.adana_result{
+  font-weight: bold;
+  font-size: 30px;
+}
+
 .room_title {
   display: flex;
   justify-content: center;
@@ -111,12 +116,13 @@ code {
 
 .remainingTimeContainer {
   position: relative;
+  top: 10px;
 }
 
 .remainingTime {
   position: absolute;
-  right: 0;
-  top: 0;
+  top: -20%;
+  right: -20%;
   font-size: 350%; /* フォントサイズを大きく */
   color: #f512a9;
   background-color: #ffffff; /* 背景色を白に設定 */
@@ -150,18 +156,21 @@ code {
 }
 
 .input_name {
-  width: 70%;
-  padding: 10px;
+  width: 100%;
+  padding: 10px 0px;
 }
 
 .send_adana {
   margin: 18px 0;
-  padding: 10px 0;
-  width: 20%;
+  padding: 10px 20px;
+  max-width: 50%;
   border-radius: 5px;
   border-color: #ffc6ff;
   background: linear-gradient(to right, #fabcfa, #d5b6f3);
-
+  
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
   color: white;
   font-size: 12px;
 }
@@ -174,6 +183,10 @@ li {
   list-style: none;
 }
 
+.select_space{
+  padding: 0px;
+}
+
 .select_button {
   font-size: 15px;
   color: #6b6969;
@@ -181,7 +194,7 @@ li {
   border: 2px solid #add6ff;
   background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
   box-shadow: 0 5px 10px rgba(92, 91, 91, 0.2);
-  padding: 12px 20px;
+  padding: 12px 0px;
   width: 100%;
   margin-bottom: 10px;
   transition: all 0.3s ease;
@@ -296,5 +309,10 @@ li {
     font-size: 15px;
     padding-bottom: 10px;
     color: #9932cc;
+  }
+
+  .adana_result {
+    font-weight: bold;
+    font-size: 25px;
   }
 }
