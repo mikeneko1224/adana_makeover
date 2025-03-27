@@ -87,6 +87,8 @@ async def handle_game_stage(data: dict, room_id: str):
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingAnswer"})
             nameCounts[room_id] = 0
             questionsCount[room_id] = 0
+            badCount[room_id] = 0
+            votes[room_id] = {}
     elif data["gameStage"] == "sendAnswer":
         answer[room_id] = data["answer"]
         isCounting[room_id] = False
@@ -146,12 +148,10 @@ async def handle_vote(data: dict, room_id: str):
         badCount[room_id] += 1
     if sum(votes[room_id].values()) + badCount[room_id] == len(rooms[room_id]):
         if sum(votes[room_id].values()) <= badCount[room_id]:
-            await broadcast_message(room_id, {"type": "result", "result": votes[room_id], "badCount": badCount[room_id]})
+            await broadcast_message(room_id, {"type": "result", "votes": votes[room_id], "badCount": badCount[room_id]})
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
             await asyncio.sleep(8)
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "waitingQuestion"})
-            badCount[room_id] = 0
-            votes[room_id] = {}
         else:
             await broadcast_message(room_id, {"type": "votes", "votes": votes[room_id], "badCount": badCount[room_id]})
             await broadcast_message(room_id, {"type": "gameStage", "gameStage": "showResult"})
