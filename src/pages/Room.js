@@ -4,6 +4,7 @@ import HostView from "../host/hostView";
 import UserView from "../user/userView";
 import { Header } from "component/header";
 import GameProgress from "../component/gameProgress";
+import Howto from "component/howto";
 
 function Room() {
   const { roomId } = useParams();
@@ -136,6 +137,7 @@ function Room() {
           bonusTimeUsed={bonusTimeUsed}
         />
       )}
+      <Howto />
     </div>
   );
 }

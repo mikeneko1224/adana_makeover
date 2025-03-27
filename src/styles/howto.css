@@ -1,0 +1,102 @@
+.text.howto {
+  text-align: center;
+  font-weight: bold;
+  margin: 0 auto;
+  margin-top: 20px;
+  display: block;
+  cursor: pointer;
+  color: #43cf6d;
+  background-color: #ffffff;
+  border-radius: 50%;
+  padding: 10px 30px;
+  border: #83e7a1 5px solid;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(67, 207, 109, 0.5), 0 5px 5px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgba(67, 207, 109, 0.3);
+}
+
+.text.howto:hover {
+  background-color: #43cf6d;
+  color: #ffffff;
+  transform: scale(1.1, 1.1);
+  box-shadow: 0 10px 20px rgba(67, 207, 109, 0.5), 0 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+.kome{
+  font-size: 15px;
+  color: #00000086;
+}
+
+h3{
+  background-color: aliceblue;
+  margin-top: 40px;
+}
+
+.hirameki_button {
+  font-size: 16px;
+  color: #6b6969;
+  border-radius: 20px;
+  border: 2px solid #ffeb3b;
+  background-image: linear-gradient(45deg, #ffeb3b, #fff176);
+  box-shadow: 0 10px 20px rgba(255, 215, 0, 0.5), 0 5px 5px rgba(89, 75, 0, 0.3);
+  padding: 12px 20px;
+  width: 45%;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.3);
+}
+
+.hirameki_button:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  transform: scale(1.2, 1.2);
+  color: #fff;
+}
+
+.hirameki_button:before {
+  content: "💡";
+  position: absolute;
+  font-size: 30px;
+  transform: rotate(25deg);
+}
+
+.hirameki_button:before {
+  top: -15px;
+  left: 85%;
+}
+
+.hirameki_button:active {
+  transform: scale(1);
+  box-shadow: 0 5px 15px rgba(92, 91, 91, 0.2);
+}
+
+.retry_button {
+  font-size: 16px;
+  color: #ffffff;
+  border-radius: 20px;
+  border: 2px solid #8ab6d6;
+  background-image: linear-gradient(45deg, #a0c7e9, #c5a3d3);
+  box-shadow: 0 8px 15px rgba(160, 199, 233, 0.4),
+    0 4px 4px #c5a3d34d;
+  padding: 12px 20px;
+  width: 45%;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(160, 199, 233, 0.3);
+}
+
+.retry_button:hover {
+  box-shadow: 0 10px 20px rgba(160, 199, 233, 0.6);
+  transform: scale(1.2, 1.2);
+  color: #fff;
+}
+
+.retry_button:active {
+  transform: scale(1);
+  box-shadow: 0 5px 10px rgba(160, 199, 233, 0.3);
+}
