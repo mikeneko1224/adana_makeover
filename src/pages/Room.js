@@ -22,6 +22,7 @@ function Room() {
   const [votes, setVotes] = useState([]);
   const [remainingTime, setTimeRemaining] = useState(40);
   const [bonusTimeUsed, setBonusTimeUsed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     //あだ名を決めたい人の名前持ってきた
@@ -29,12 +30,15 @@ function Room() {
 
     if (roomId) {
       //デプロイ時はこっち
-      const websocket = new WebSocket(`wss://adana-makeover.onrender.com/ws/${roomId}`);
+      const websocket = new WebSocket(
+        `wss://adana-makeover.onrender.com/ws/${roomId}`
+      );
       //ローカルで動かすときはこっち
       // const websocket = new WebSocket(`ws://127.0.0.1:8000/ws/${roomId}`);
 
       websocket.onopen = () => {
         websocket.send(JSON.stringify({ type: "join", name }));
+        setTimeout(() => setIsLoading(false), 2000);
       };
 
       websocket.onmessage = (event) => {
@@ -58,7 +62,11 @@ function Room() {
         } else if (message.type === "hostName") {
           setHostName(message.name);
         } else if (message.type === "gameStage") {
-          setGameStage(message.gameStage);
+          setIsLoading(true);
+          setTimeout(() => {
+            setGameStage(message.gameStage);
+            setIsLoading(false);
+          }, 1000);
           if (gameStage === "gameOver") {
             websocket.close();
           }
@@ -89,7 +97,9 @@ function Room() {
 
   const startContent = () => {
     if (onlineCount < 2) {
-      alert("このゲームは2人以上でスタートできるよ！リンクを送って友達を誘おう！");
+      alert(
+        "このゲームは2人以上でスタートできるよ！リンクを送って友達を誘おう！"
+      );
       return;
     }
     if (ws) {
@@ -100,45 +110,53 @@ function Room() {
   };
 
   return (
-    <div className="Room">
-      <Header />
-      <GameProgress gameStage={gameStage} />
-      {isHost ? (
-        <HostView
-          contentStarted={contentStarted}
-          startContent={startContent}
-          inviteLink={window.location.href}
-          hostName={hostName}
-          onlineCount={onlineCount}
-          gameStage={gameStage}
-          ws={ws}
-          imageData={imageData}
-          questions={questions}
-          keyword={keyword}
-          nicknames={nicknames}
-          votes={votes}
-          remainingTime={remainingTime}
-          bonusTimeUsed={bonusTimeUsed}
-          isHost={isHost}
-        />
+    <>
+      {isLoading ? (
+        <div className="loading-screen">
+          <img src="/logo.png" alt="Loading..." className="loading-logo" />
+        </div>
       ) : (
-        <UserView
-          contentStarted={contentStarted}
-          hostName={hostName}
-          onlineCount={onlineCount}
-          gameStage={gameStage}
-          ws={ws}
-          imageData={imageData}
-          questions={questions}
-          keyword={keyword}
-          nicknames={nicknames}
-          votes={votes}
-          remainingTime={remainingTime}
-          bonusTimeUsed={bonusTimeUsed}
-        />
+        <div className="Room">
+          <Header />
+          <GameProgress gameStage={gameStage} />
+          {isHost ? (
+            <HostView
+              contentStarted={contentStarted}
+              startContent={startContent}
+              inviteLink={window.location.href}
+              hostName={hostName}
+              onlineCount={onlineCount}
+              gameStage={gameStage}
+              ws={ws}
+              imageData={imageData}
+              questions={questions}
+              keyword={keyword}
+              nicknames={nicknames}
+              votes={votes}
+              remainingTime={remainingTime}
+              bonusTimeUsed={bonusTimeUsed}
+              isHost={isHost}
+            />
+          ) : (
+            <UserView
+              contentStarted={contentStarted}
+              hostName={hostName}
+              onlineCount={onlineCount}
+              gameStage={gameStage}
+              ws={ws}
+              imageData={imageData}
+              questions={questions}
+              keyword={keyword}
+              nicknames={nicknames}
+              votes={votes}
+              remainingTime={remainingTime}
+              bonusTimeUsed={bonusTimeUsed}
+            />
+          )}
+          <Howto />
+        </div>
       )}
-      <Howto />
-    </div>
+    </>
   );
 }
 

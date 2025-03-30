@@ -31,7 +31,7 @@ export default function Howto() {
         <p>半分以上が</p>
         <button class="retry_button">もう一度！</button>
         <p>に投票すると、3に戻るよ！</p>
-
+        <p class="kome">@2025 KUF-UME</p>
       `,
       icon: "question",
       confirmButtonText: "戻る",

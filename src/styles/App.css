@@ -37,6 +37,53 @@
   font-weight: bold;
 }
 
+/* アニメーション */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5); /* 小さく縮小 */
+    opacity: 0; /* 透明 */
+  }
+  50% {
+    transform: scale(1.1); /* 少し大きく */
+    opacity: 1; /* 表示 */
+  }
+  100% {
+    transform: scale(1); /* 元のサイズ */
+    opacity: 1; /* 表示 */
+  }
+}
+
+.loading-logo {
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  animation: spin 2s linear infinite;
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 /* スマートフォン用のスタイル */
 @media screen and (max-width: 600px) {
   .text_input {
@@ -54,4 +101,15 @@
     font-size: 20px;
     font-weight: bold;
   }
+
+  .loading-logo {
+    position: absolute;
+    top: 45%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    animation: spin 2s linear infinite;
+  }
 }
+
