@@ -73,7 +73,7 @@ function UserView({
   }, [remainingTime, isNicknameSent, ws, nickname]);
 
   const [audioPlayed, setAudioPlayed] = useState(false);
-  
+
   useEffect(() => {
     if (bonusTimeUsed && !audioPlayed) {
       const audio = new Audio("/bonusTimeStart.mp3");
@@ -279,20 +279,22 @@ function UserView({
         </div>
       )}
       {contentStarted && gameStage === "gameOver" && (
-        <div class="children_space">
-          <div class="text">ゲーム終了</div>
-          {Object.keys(votes).length > 0 && (
-            <div class="text adana_result">
-              {Object.entries(votes)
-                .filter(
-                  ([nickname, count]) =>
-                    count === Math.max(...Object.values(votes))
-                )
-                .map(([nickname]) => nickname)
-                .join(", ")}
-            </div>
-          )}
-          <div class="text">さっそく呼んでみて！</div>
+        <div class="children">
+          <div class="children_space">
+            <div class="text">ゲーム終了</div>
+            {Object.keys(votes).length > 0 && (
+              <div class="text adana_result">
+                {Object.entries(votes)
+                  .filter(
+                    ([nickname, count]) =>
+                      count === Math.max(...Object.values(votes))
+                  )
+                  .map(([nickname]) => nickname)
+                  .join(", ")}
+              </div>
+            )}
+            <div class="text">さっそく呼んでみて！</div>
+          </div>
         </div>
       )}
     </div>
