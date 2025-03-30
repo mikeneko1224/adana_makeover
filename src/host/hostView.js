@@ -27,7 +27,6 @@ function HostView({
     setIsNicknameSent(false);
     setAudioPlayed(false);
   };
-  const audio = new Audio("/bonusTimeStart.mp3");
 
   useEffect(() => {
     if (gameStage === "waitingQuestion") {
@@ -109,6 +108,7 @@ function HostView({
   }, [remainingTime, isNicknameSent]);
 
   const [audioPlayed, setAudioPlayed] = useState(false);
+  const audio = new Audio("/bonusTimeStart.mp3");
   useEffect(() => {
     if (bonusTimeUsed && !audioPlayed) {
       audio.play();
